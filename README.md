@@ -2,12 +2,12 @@
 
 ## Setup Instructions
 
-### **1. Create a Virtual Environment**
+### **1. Create a Virtual Environment (only done once)**
 ```sh
 python3 -m venv .venv
 ```
 
-### **2. Activate the Virtual Environment**
+### **2. Activate the Virtual Environment (do every time you start working on project)**
 - On **macOS/Linux**:
     ```sh
     source .venv/bin/activate
