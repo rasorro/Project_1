@@ -1,5 +1,32 @@
-Create Virtual Environment: python3 -m venv .venv
-Run Virtual Environment: . venv/bin/activate
-Install dependencies: pip install -r requirements.txt
+# Project 1
 
-If you use a new depedency, update requirements.txt: pip freeze > requirements.txt
+## Setup Instructions
+
+### **1. Create a Virtual Environment**
+```sh
+python3 -m venv .venv
+```
+
+### **2. Activate the Virtual Environment**
+- On **macOS/Linux**:
+    ```sh
+    source .venv/bin/activate
+    ```
+- On **Windows**
+    ```sh
+    .venv\scripts\activate
+    ```
+### **3. Install Dependencies**
+```sh
+pip install -r requirements.txt
+```
+
+### If you install a new package, update 'requirements.txt':
+```sh
+pip freeze > requirements.txt
+```
+
+### Running the Application
+```sh
+flask --app flaskr run
+```
