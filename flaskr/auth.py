@@ -19,32 +19,44 @@ def register():
 
         if not user_ID:
             error = 'Username is required.'
+        elif len(user_ID) !=5:
+            error = 'user_ID must be 5 characters'
         elif not password:
             error = 'Password is required.'
 
+        if error is None:
+            user_exists = db.execute(
+                "SELECT userID FROM Authentication WHERE userID = ?", (user_ID,)
+            ).fetchone()
+            if user_exists:
+                error = f"User {user_ID} is already registered."
+
         """
-        Currently, in order for successful registration, user_ID must correspond
-        to an existing CustomerID. Functionality needs to be added for registering
-        completely new Customers.
+        Need to update below , maybe some sort of authentication allowing them to
+        verify with other info in northwind database (e.g., postal code + phone)
         """
-        customer_exists = db.execute(
-            "SELECT CustomerID FROM Customers WHERE CustomerID = ?", (user_ID,)
-        ).fetchone()
-        if not customer_exists:
-            error = f'No such Customer ID: {user_ID}. Please use a valid Customer ID.'
+        if error is None:
+            customer_exists = db.execute(
+                "SELECT CustomerID FROM Customers WHERE CustomerID = ?", (user_ID,)
+            ).fetchone()
+            if customer_exists:
+                error = f'CustomerID {user_ID} already exists but does not have a password.'
 
         if error is None:
             try:
+                db.execute(
+                    "INSERT INTO Customers (CustomerID) VALUES (?)", (user_ID,)
+                )
                 db.execute(
                     "INSERT INTO Authentication (userID, passwordHash) VALUES (?, ?)",
                     (user_ID, generate_password_hash(password)),
                 )
                 db.commit()
             except db.IntegrityError:
-                error = f"User {user_ID} is already registered."
+                error = f"User {user_ID} registration failed."
             else:
                 return redirect(url_for("auth.login"))
-
+        
         flash(error)
 
     return render_template('auth/register.html')
@@ -52,7 +64,7 @@ def register():
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        user_id = request.form['username']
+        user_id = request.form['username'].upper()
         password = request.form['password']
         db = get_db()
         error = None
@@ -82,7 +94,7 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = get_db().execute(
-            'SELECT * FROM Authentication WHERE id = ?', (user_id,)
+            'SELECT * FROM Authentication WHERE userID = ?', (user_id,)
         ).fetchone()
 
 @bp.route('/logout')

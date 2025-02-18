@@ -33,6 +33,12 @@ def init_db():
     """)
     db.commit()
 
+@click.command('init-db')
+def init_db_command():
+    """Create auth tables."""
+    init_db()
+    click.echo('Initialized the database.')
+
 @click.command('test-db')
 def test_db_command():
     db = get_db()
@@ -42,4 +48,4 @@ def test_db_command():
 def init_app(app):
     app.teardown_appcontext(close_db)
     app.cli.add_command(test_db_command)
-
+    app.cli.add_command(init_db_command)
