@@ -20,6 +20,7 @@ python3 -m venv .venv
 ```sh
 pip install -r requirements.txt
 ```
+## Useful Info
 
 ### If you install a new package, update 'requirements.txt':
 ```sh
