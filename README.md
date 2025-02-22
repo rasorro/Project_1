@@ -4,7 +4,7 @@
 ## Team Members
 - **Robbie Rasor** – Team Lead
 - **[Teammate 1]** – Development Engineer
-- **[Teammate 2]** – Test Engineer
+- **Max Montes Soza** – Test Engineer
 - **[Teammate 3]** - Documentation Specialist
 - **[Teammate 4]** - General Developer
 
@@ -20,6 +20,7 @@ We...:
 - **Feature 1**: Good feature. Well done.
 
 ## Installation & Setup
+- Will need to update before we submit to have info for aviram + ta rather than for us
 
 ### **0. Clone the repository:**
     ```sh
