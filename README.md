@@ -58,3 +58,12 @@ pip freeze > requirements.txt
 ```sh
 flask --app flaskr run
 ```
+
+### Running the Tests
+```sh
+pytest
+```
+- View coverage of tests:
+    ```sh
+    coverage run -m pytest
+    ```
