@@ -1,6 +1,32 @@
-# Project 1
+# Project 1: Online Commerce
 
-## Setup Instructions
+
+## Team Members
+- **Robbie Rasor** – Team Lead
+- **[Teammate 1]** – Development Engineer
+- **[Teammate 2]** – Test Engineer
+- **[Teammate 3]** - Documentation Specialist
+- **[Teammate 4]** - General Developer
+
+
+## Testing Approach
+We...:
+
+- **Unit Testing**: Text...
+- **Integration Testing**: Text...
+- **Test-Driven Development (TDD)**: Text...
+
+## Notable Features
+- **Feature 1**: Good feature. Well done.
+
+## Installation & Setup
+
+### **0. Clone the repository:**
+    ```sh
+    git clone https://github.com/rasorro/Project_1.git
+    cd Project_1
+    ```
+    - Your command may be different, check you're able to pull and push before you start working to save a headache at the end. Setting up an ssh key so I could push and commit took a while for me to figure out.
 
 ### **1. Create a Virtual Environment (only done once)**
 ```sh
