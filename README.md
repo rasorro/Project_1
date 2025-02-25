@@ -23,10 +23,10 @@ We...:
 - Will need to update before we submit to have info for aviram + ta rather than for us
 
 ### **0. Clone the repository:**
-    ```sh
-    git clone https://github.com/rasorro/Project_1.git
-    cd Project_1
-    ```
+```sh
+git clone https://github.com/rasorro/Project_1.git
+cd Project_1
+```
     - Your command may be different, check you're able to pull and push before you start working to save a headache at the end. Setting up an ssh key so I could push and commit took a while for me to figure out.
 
 ### **1. Create a Virtual Environment (only done once)**
