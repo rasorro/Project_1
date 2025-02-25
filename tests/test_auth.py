@@ -6,19 +6,20 @@ from flaskr.db import get_db
 def test_register(client, app):
     assert client.get('/auth/register').status_code == 200
     response = client.post(
-        '/auth/register', data={'username': 'a', 'password': 'a'}
+        '/auth/register', data={'username': 'ABCDE', 'password': 'password'}
     )
     assert response.headers["Location"] == "/auth/login"
 
     with app.app_context():
         assert get_db().execute(
-            "SELECT * FROM Authentication WHERE userID = 'a'",
+            "SELECT * FROM Authentication WHERE userID = 'ABCDE'",
         ).fetchone() is not None
 
 @pytest.mark.parametrize(('username', 'password', 'message'), (
     ('', '', b'Username is required.'),
-    ('a', '', b'Password is required.'),
-    ('test', 'test', b'already registered'),
+    ('ABCDE', '', b'Password is required.'),
+    ('ABCDE', 'password', b'User ABCDE is already registered.'),
+    ('ABCD', 'password', b'user_ID must be 5 characters'),
 ))
 def test_register_validate_input(client, username, password, message):
     response = client.post(
@@ -26,6 +27,17 @@ def test_register_validate_input(client, username, password, message):
         data={'username': username, 'password': password}
     )
     assert message in response.data
+
+def test_register_existing_customer_no_password(client, app):
+    with app.app_context():
+        db = get_db()
+        db.execute("INSERT INTO Customers (CustomerID) VALUES ('ABCDE')")
+        db.commit()
+
+    response = client.post(
+        '/auth/register', data={'username': 'ABCDE', 'password': 'password'}
+    )
+    assert b'CustomerID ABCDE already exists but does not have a password.' in response.data
 
 def test_login(client, auth):
     assert client.get('/auth/login').status_code == 200
@@ -51,3 +63,8 @@ def test_logout(client, auth):
     with client:
         auth.logout()
         assert 'user_id' not in session
+
+def test_protected_route(client):
+    response = client.get('/protected_route')
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/auth/login"
