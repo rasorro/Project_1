@@ -30,6 +30,21 @@ def init_db():
             passwordHash TEXT NOT NULL,
             sessionID TEXT
         );
+                     
+        CREATE TABLE IF NOT EXISTS Shopping_Cart (
+            cartID TEXT PRIMARY KEY,
+            productID TEXT NOT NULL REFERENCES Products(ProductID),
+            quantity INTEGER NOT NULL CHECK (quantity > 0),
+            added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS Orders(
+            orderID TEXT PRIMARY KEY,
+            userID TEXT NOT NULL REFERENCES Authentication(userID),
+            productID TEXT NOT NULL REFERENCES Products(productID),
+            quantity INTEGER NOT NULL CHECK(quantity > 0),
+            order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
     """)
     db.commit()
 

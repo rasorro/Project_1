@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Cart{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  {% for cart_item in cart_items %}
+    <article class="cart_item">
+      <header>
+        <h3>{{ cart_item['ProductID'] }}</h3>
+        <div class="quantity">${{ cart_item['quantity'] }}</div>
+        <div class="time_stamp">TimeStamp: {{ cart_item['added_at'] }}</div>
+      </header>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}

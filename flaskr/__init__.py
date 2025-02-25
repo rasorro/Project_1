@@ -39,4 +39,8 @@ def create_app(test_config=None):
     app.register_blueprint(shop.bp)
     app.add_url_rule('/', endpoint='index')
 
+    from . import checkout
+    app.register_blueprint(checkout.bp)
+    app.add_url_rule('/', endpoint='cart')
+
     return app
