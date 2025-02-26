@@ -17,9 +17,10 @@ def test_register(client, app):
 
 @pytest.mark.parametrize(('username', 'password', 'message'), (
     ('', '', b'Username is required.'),
-    ('ABCDE', '', b'Password is required.'),
-    ('ABCDE', 'password', b'User ABCDE is already registered.'),
-    ('ABCD', 'password', b'user_ID must be 5 characters'),
+    ('test1', '', b'Password is required.'),
+    ('test1', 'test', b'User TEST1 is already registered.'),
+    ('test', 'password', b'user_ID must be 5 characters'),
+    ('test2', 'password', b'You should be redirected automatically'),
 ))
 def test_register_validate_input(client, username, password, message):
     response = client.post(
@@ -46,12 +47,13 @@ def test_login(client, auth):
 
     with client:
         client.get('/')
-        assert session['user_id'] == 1
-        assert g.user['username'] == 'test'
+        assert session['userID'] == 'TEST1'
+        assert g.user['userID'] == 'TEST1'
 
 @pytest.mark.parametrize(('username', 'password', 'message'), (
     ('a', 'test', b'Incorrect username.'),
-    ('test', 'a', b'Incorrect password.'),
+    ('test1', 'a', b'Incorrect password.'),
+    ('test1', 'test', b'You should be redirected automatically'),
 ))
 def test_login_validate_input(auth, username, password, message):
     response = auth.login(username, password)
@@ -64,7 +66,11 @@ def test_logout(client, auth):
         auth.logout()
         assert 'user_id' not in session
 
+
+"""
+update /protected_route to route to checkout page (when it exists)
 def test_protected_route(client):
     response = client.get('/protected_route')
     assert response.status_code == 302
     assert response.headers["Location"] == "/auth/login"
+"""
