@@ -66,7 +66,6 @@ def test_logout(client, auth):
         auth.logout()
         assert 'user_id' not in session
 
-
 """
 update /protected_route to route to checkout page (when it exists)
 def test_protected_route(client):
