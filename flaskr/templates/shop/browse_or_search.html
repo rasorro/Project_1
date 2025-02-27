@@ -27,7 +27,7 @@
 
 {% if products %}
 <h2>
-  Products {% if active_category %}in {{ active_category['CategoryName'] }}{% endif %}
+  Products{% if active_category %} in {{ active_category['CategoryName'] }}{% endif %}
 </h2>
 <ul>
   {% for product in products %}
