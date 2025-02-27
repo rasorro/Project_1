@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 
-{% block content %}
-    <h2>{{ product_info['ProductName'] }}</h2>
-    <p>Price: ${{ product_info['UnitPrice'] }}</p>
-    <p>{{ product_info['QuantityPerUnit'] }}</p>
-    <a href="{{ url_for('shop.browse_or_search') }}">Back to shop</a>
-{% endblock %}
 
+{% block content %}
+{% if product_info %}
+<h2>{{ product_info['ProductName'] }}</h2>
+<p>Price: ${{ product_info['UnitPrice'] }}</p>
+<p>{{ product_info['QuantityPerUnit'] }}</p>
+<a href="{{ url_for('shop.browse_or_search') }}">Back to shop</a>
+{% else %}
+<h2>Product not found</h2>
+<a href="{{ url_for('shop.browse_or_search') }}">Back to shop</a>
+{% endif %}
+{% endblock %}

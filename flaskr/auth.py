@@ -1,10 +1,8 @@
 import functools
-
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
-
 from flaskr.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -16,21 +14,18 @@ def register():
         password = request.form['password']
         db = get_db()
         error = None
-
         if not user_ID:
             error = 'Username is required.'
         elif len(user_ID) !=5:
             error = 'user_ID must be 5 characters'
         elif not password:
             error = 'Password is required.'
-
         if error is None:
             user_exists = db.execute(
                 "SELECT userID FROM Authentication WHERE userID = ?", (user_ID,)
             ).fetchone()
             if user_exists:
                 error = f"User {user_ID} is already registered."
-
         """
         Need to update below , maybe some sort of authentication allowing them to
         verify with other info in northwind database (e.g., postal code + phone)
@@ -41,7 +36,6 @@ def register():
             ).fetchone()
             if customer_exists:
                 error = f'CustomerID {user_ID} already exists but does not have a password.'
-
         if error is None:
             try:
                 db.execute(
@@ -55,10 +49,8 @@ def register():
             except db.IntegrityError:
                 error = f"User {user_ID} registration failed."
             else:
-                return redirect(url_for("auth.login"))
-        
+                return redirect(url_for("auth.login"))      
         flash(error)
-
     return render_template('auth/register.html')
 
 @bp.route('/login', methods=('GET', 'POST'))
@@ -71,25 +63,20 @@ def login():
         user = db.execute(
             'SELECT * FROM Authentication WHERE userID = ?', (user_id,)
         ).fetchone()
-
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user['passwordHash'], password):
             error = 'Incorrect password.'
-
         if error is None:
             session.clear()
             session['userID'] = user['userID']
             return redirect(url_for('index'))
-
         flash(error)
-
     return render_template('auth/login.html')
 
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get('userID')
-
     if user_id is None:
         g.user = None
     else:
@@ -107,7 +94,5 @@ def login_required(view):
     def wrapped_view(**kwargs):
         if g.user is None:
             return redirect(url_for('auth.login'))
-
         return view(**kwargs)
-
     return wrapped_view

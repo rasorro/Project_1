@@ -12,3 +12,7 @@ INSERT INTO [Categories] (CategoryID, CategoryName)
 Values
 	(1, "Example category-1"),
 	(2, "Example category-2");
+
+INSERT INTO [Customers] (CustomerID)
+Values
+	('TEST0');

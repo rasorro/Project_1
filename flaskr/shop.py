@@ -2,20 +2,9 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from werkzeug.exceptions import abort
-
-from flaskr.auth import login_required
 from flaskr.db import get_db
 
 bp = Blueprint('shop', __name__)
-
-def index():
-    db = get_db()
-    products = db.execute(
-        'SELECT ProductID, ProductName, UnitPrice, c.CategoryID, CategoryName'
-        ' FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID'
-        ' ORDER BY CategoryName DESC'
-    ).fetchall()
-    return render_template('shop/index.html', products=products)
 
 @bp.route('/')
 def browse_or_search():
@@ -41,7 +30,11 @@ def browse_or_search():
 
     categories = db.execute('SELECT CategoryID, CategoryName FROM Categories').fetchall()
 
-    return render_template('shop/browse_or_search.html', products=products, categories=categories)
+    active_category = None
+    if category_id:
+        active_category = db.execute('SELECT CategoryID, CategoryName FROM Categories WHERE CategoryID = ?', (category_id,)).fetchone()
+
+    return render_template('shop/browse_or_search.html', products=products, categories=categories, active_category=active_category, search_query=search_query)
 
 @bp.route('/product/<int:product_id>')
 def product_details(product_id):
@@ -51,8 +44,5 @@ def product_details(product_id):
         '''SELECT ProductID, ProductName, UnitPrice, QuantityPerUnit
            FROM Products
            WHERE ProductID = ?''', (product_id,)).fetchone()
-
-    if product_info is None:
-        abort(404, "Item not available")
 
     return render_template('shop/product_details.html', product_info=product_info)
