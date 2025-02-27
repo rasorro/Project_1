@@ -26,10 +26,10 @@ def browse_or_search():
     if category_id:
         query += ' WHERE p.CategoryID = ?'
         params.append(category_id)
-        query_2 = 'SELECT CategoryID, CategoryName FROM Categories WHERE CategoryID = ?'
-        active_category = db.execute(query_2, (category_id,)).fetchone()
+        get_category_name_query = 'SELECT CategoryID, CategoryName FROM Categories WHERE CategoryID = ?'
+        active_category = db.execute(get_category_name_query, (category_id,)).fetchone()
     elif search_query:
-        query += ' WHERE  unidecode(p.ProductName) LIKE ?'
+        query += ' WHERE  unidecode(p.ProductName) LIKE unidecode(?)'
         params.append(f'%{search_query}%')
 
     query += ' ORDER BY ProductName'
