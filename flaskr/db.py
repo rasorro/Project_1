@@ -28,6 +28,7 @@ def init_db():
                      
         CREATE TABLE IF NOT EXISTS [Shopping_Cart] (
             cartID TEXT PRIMARY KEY,
+            shopperID TEXT,
             productID TEXT NOT NULL REFERENCES Products(ProductID),
             quantity INTEGER NOT NULL CHECK (quantity > 0),
             added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

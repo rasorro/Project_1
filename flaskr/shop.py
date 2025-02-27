@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.exceptions import abort
 from flaskr.db import get_db
@@ -40,13 +40,19 @@ def browse_or_search():
 
     return render_template('shop/browse_or_search.html', products=products, categories=categories, active_category=active_category, search_query=search_query)
 
-@bp.route('/product/<int:product_id>')
+@bp.route('/product/<int:product_id>', methods=('GET', 'POST'))
 def product_details(product_id):
     db = get_db()
-
+    if request.method == 'POST':
+        quantity = int(request.form['quantity'])
+        db.execute(
+            'INSERT INTO [Shopping_Cart] (shopperID, productID, quantity) VALUES (?, ?, ?)',
+            (session.get('userID'), product_id, quantity)
+        )
+        db.commit()
+        flash('Product added to cart successfully!')
     product_info = db.execute(
         '''SELECT ProductID, ProductName, UnitPrice, QuantityPerUnit
            FROM Products
            WHERE ProductID = ?''', (product_id,)).fetchone()
-
     return render_template('shop/product_details.html', product_info=product_info)
