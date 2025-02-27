@@ -3,7 +3,7 @@ from flask import g, session
 from flaskr.db import get_db
 
 @pytest.mark.parametrize(('category', 'search', 'message'), (
-    ('', '', b'Example item-2'),
+    ('', '', b'Products'),
     ('1', '', b'Products in Example category-1'),
     ('', 'item-1', b'Search results for "item-1"'),
     ('1', 'item', b'Products in Example category-1'),

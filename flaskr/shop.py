@@ -15,7 +15,7 @@ def browse_or_search():
     db = get_db()
     create_unidecode_function(db)
     category_id = request.args.get('category')
-    search_query = request.args.get('search').strip()
+    search_query = request.args.get('search')
 
     query = ('SELECT ProductID, ProductName, UnitPrice, c.CategoryID, CategoryName'
         ' FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID')
@@ -29,8 +29,8 @@ def browse_or_search():
         get_category_name_query = 'SELECT CategoryID, CategoryName FROM Categories WHERE CategoryID = ?'
         active_category = db.execute(get_category_name_query, (category_id,)).fetchone()
     elif search_query:
-        query += ' WHERE  unidecode(p.ProductName) LIKE unidecode(?)'
-        params.append(f'%{search_query}%')
+        query += ' WHERE unidecode(p.ProductName) LIKE unidecode(?)'
+        params.append(f'%{search_query.strip()}%')
 
     query += ' ORDER BY ProductName'
 
