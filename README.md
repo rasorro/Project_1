@@ -19,6 +19,7 @@ We...:
 ## Notable Features
 - Search bar updates while typing
 - Search results are accent mark insenitive
+- Manual cart removal button
 
 ## Installation & Setup
 - Will need to update before we submit to have info for aviram + ta rather than for us
