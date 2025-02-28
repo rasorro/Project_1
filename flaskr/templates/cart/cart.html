@@ -11,8 +11,8 @@
         <header>
           <h3>{{ cart_item['ProductName'] }}</h3>
           <div class="quantity">Quantity: {{ cart_item['quantity'] }}</div>
-          <div class="price">Unit Price: ${{ cart_item['UnitPrice'] }}</div>
-          <div class="total_price">Total: ${{ cart_item['TotalPrice'] }}</div>
+          <div class="price">Unit Price: ${{ "%.2f"|format(cart_item['UnitPrice']) }}</div>
+          <div class="total_price">Total: ${{ "%.2f"|format(cart_item['TotalPrice']) }}</div>
         </header>
 
         <!-- Remove Item Button -->

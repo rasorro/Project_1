@@ -14,16 +14,13 @@ def cart():
     db = get_db()
     cart_items = db.execute(
         '''
-        SELECT sc.productID, p.ProductName, sc.quantity, p.UnitPrice, 
-                (sc.quantity * p.UnitPrice) AS TotalPrice
+        SELECT sc.productID, p.ProductName, SUM(sc.quantity) AS quantity, p.UnitPrice, 
+            (SUM(sc.quantity) * p.UnitPrice) AS TotalPrice
         FROM Shopping_Cart sc
         JOIN Products p ON sc.productID = p.ProductID
+        GROUP BY sc.productID, p.ProductName, p.UnitPrice
         '''
-        ).fetchall()
-
-    # Debugging: Print the cart contents
-    print("Cart items:", cart_items)
-
+    ).fetchall()
     return render_template('cart/cart.html', cart_items=cart_items)
 
 @bp.route('/checkout', methods=('GET', 'POST'))
