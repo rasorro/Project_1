@@ -5,6 +5,7 @@ from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
 from flaskr.db import get_db
+from datetime import datetime
 
 bp = Blueprint('cart', __name__, url_prefix='/cart')
 
@@ -28,16 +29,33 @@ def cart():
 @bp.route('/checkout', methods=('GET', 'POST'))
 @login_required
 def checkout():
-    db = get_db()
-    #if request.method == 'POST':
-        #shipping_address = request.form['shipping_address']
-        #billing_address = request.form['billing_address']
-        #payment_method = request.form['payment_method']
-        #order_notes = request.form['order_notes']
+    if request.method == 'POST':
+        db = get_db()
+        customer_id = session.get('userID')
+        order_date = datetime.now()
+        shipping_address = request.form['shipping_address']
+        ship_city = request.form['ship_city']
+        ship_postal_code = request.form['ship_postal_code']
+        ship_country = request.form['ship_country']
+        billing_address = request.form['billing_address']
+        card_number = request.form['card_number']
+        order_notes = request.form['order_notes']
 
-        # Insert the order into the Orders table
-        #db.execute(
-        #    'INSERT INTO Orders (CustomerID, OrderDate, RequiredDate, ShippedDate, ShipVia, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry) VALUES (?,
+        db.execute(
+           'INSERT INTO Orders (CustomerID, OrderDate, ShipAddress, ShipCity, ShipPostalCode, ShipCountry) VALUES (?, ?, ?, ?, ?, ?)',
+           (customer_id, order_date, shipping_address, ship_city, ship_postal_code, ship_country)
+        )
+        db.commit()
+
+        db.execute(
+            'DELETE FROM Shopping_Cart WHERE shopperID = ?',
+            (customer_id,)
+        )
+        db.commit()
+
+        flash('Order placed successfully!')
+        return redirect(url_for('cart.cart'))
+
     return render_template('cart/checkout.html')
 
 @bp.route('/remove/<int:product_id>', methods=['POST'])
