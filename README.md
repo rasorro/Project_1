@@ -17,7 +17,8 @@ We...:
 - **Test-Driven Development**: Text...
 
 ## Notable Features
-- **Feature 1**: Good feature. Well done.
+- Search bar updates while typing
+- Search results are accent mark insenitive
 
 ## Installation & Setup
 - Will need to update before we submit to have info for aviram + ta rather than for us
