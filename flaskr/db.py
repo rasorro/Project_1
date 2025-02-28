@@ -21,17 +21,17 @@ def init_db():
     db = get_db()
     db.executescript("""
         CREATE TABLE IF NOT EXISTS [Authentication] (
-            userID TEXT PRIMARY KEY REFERENCES Customers(CustomerID) ON DELETE CASCADE,
-            passwordHash TEXT NOT NULL,
-            sessionID TEXT
+            [userID]TEXT PRIMARY KEY REFERENCES [Customers]([CustomerID]) ON DELETE CASCADE,
+            [passwordHash]TEXT NOT NULL,
+            [sessionID]TEXT
         );
                      
         CREATE TABLE IF NOT EXISTS [Shopping_Cart] (
-            cartID TEXT PRIMARY KEY,
-            shopperID TEXT,
-            productID TEXT NOT NULL REFERENCES Products(ProductID),
-            quantity INTEGER NOT NULL CHECK (quantity > 0),
-            added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            [cartID]TEXT PRIMARY KEY,
+            [shopperID]TEXT,
+            [productID]TEXT NOT NULL REFERENCES [Products]([ProductID]),
+            [quantity]INTEGER NOT NULL CHECK ([quantity] > 0),
+            [added_at]TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
         CREATE TABLE IF NOT EXISTS [Orders](
