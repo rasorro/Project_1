@@ -1,37 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Shop</h1>
+<h1>Shop</h1>
 
-  <form method="get">
-    <input type="text" name="search" placeholder="Search for a product with keyword" value="{{ request.args.get('search', '') }}">
-    <button type="submit">Search</button>
-  </form>
+<form method="get">
+  <input type="text" name="search" placeholder="Search for a product with keyword"
+    value="{{ request.args.get('search', '') }}">
+  <button type="submit">Search</button>
+</form>
 
-  <hr>
+<hr>
 
-  <h2>Categories</h2>
-  <ul>
-    {% for category in categories %}
-      <li><a href="{{ url_for('shop.browse_or_search', category=category['CategoryID']) }}">{{ category['CategoryName'] }}</a></li>
-    {% endfor %}
-  </ul>
+{% if not search_query %}
+<h2>Categories</h2>
+<ul>
+  {% for category in categories %}
+  <li><a href="{{ url_for('shop.browse_or_search', category=category['CategoryID']) }}">{{ category['CategoryName']
+      }}</a></li>
+  {% endfor %}
+</ul>
+{% else %}
+<h2>Search results for "{{ search_query }}"</h2>
+{% endif %}
 
-  <hr>
+<hr>
 
-  {% if products %}
-    <h2>Products</h2>
-    <ul>
-      {% for product in products %}
-        <li>
-            <a href="{{ url_for('shop.product_details', product_id=product['ProductID']) }}">
-                {{ product['ProductName'] }}
-            </a> - ${{ product['UnitPrice'] }}
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No products found.</p>
-  {% endif %}
+{% if products %}
+<h2>
+  Products{% if active_category %} in {{ active_category['CategoryName'] }}{% endif %}
+</h2>
+<ul>
+  {% for product in products %}
+  <li>
+    <a href="{{ url_for('shop.product_details', product_id=product['ProductID']) }}">
+      {{ product['ProductName'] }}
+    </a> - ${{ product['UnitPrice'] }}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No products found.</p>
+{% endif %}
 {% endblock %}
-

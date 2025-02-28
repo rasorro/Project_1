@@ -2,3 +2,7 @@
 __pycache__/
 *.py[cod]
 flaskr/__pycache__/
+tests/__pycache__/
+.vscode/
+.pytest_cache/
+.coverage
