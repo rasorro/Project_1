@@ -1,21 +1,39 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Cart{% endblock %}</h1>
+  <h1>{% block title %}Shopping Cart{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
-  {% for cart_item in cart_items %}
-    <article class="cart_item">
-      <header>
-        <h3>{{ cart_item['ProductID'] }}</h3>
-        <div class="quantity">${{ cart_item['quantity'] }}</div>
-        <div class="time_stamp">TimeStamp: {{ cart_item['added_at'] }}</div>
-      </header>
-    </article>
-    {% if not loop.last %}
-      <hr>
-    {% endif %}
-  {% endfor %}
-  <a href="{{ url_for('cart.checkout') }}">Checkout</a>
+  {% if cart_items %}
+    {% for cart_item in cart_items %}
+      <article class="cart_item">
+        <header>
+          <h3>{{ cart_item['ProductName'] }}</h3>
+          <div class="quantity">Quantity: {{ cart_item['quantity'] }}</div>
+          <div class="price">Unit Price: ${{ cart_item['UnitPrice'] }}</div>
+          <div class="total_price">Total: ${{ cart_item['TotalPrice'] }}</div>
+        </header>
+
+        <!-- Remove Item Button -->
+        <form method="post" action="{{ url_for('cart.remove_item', product_id=cart_item['productID']) }}">
+          <button type="submit">Remove</button>
+        </form>
+      </article>
+
+      {% if not loop.last %}
+        <hr>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Checkout Button -->
+    <a href="{{ url_for('cart.checkout') }}">
+      <button>Proceed to Checkout</button>
+    </a>
+
+  {% else %}
+    <p>Your cart is empty.</p>
+  {% endif %}
+
+  <a href="{{ url_for('shop.browse_or_search') }}">Continue Shopping</a>
 {% endblock %}
