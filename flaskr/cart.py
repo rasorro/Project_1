@@ -4,7 +4,7 @@ from flask import (
 from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
-from flaskr.db import get_db
+from flaskr.db import get_db, employee_id
 
 bp = Blueprint('cart', __name__, url_prefix='/cart')
 
@@ -36,6 +36,7 @@ def checkout():
         #order_notes = request.form['order_notes']
 
         # Insert the order into the Orders table
+        #use employee_id as val for employee_id
         #db.execute(
         #    'INSERT INTO Orders (CustomerID, OrderDate, RequiredDate, ShippedDate, ShipVia, Freight, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry) VALUES (?,
     return render_template('cart/checkout.html')

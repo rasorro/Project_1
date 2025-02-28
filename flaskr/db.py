@@ -3,6 +3,8 @@ from datetime import datetime
 import click
 from flask import current_app, g
 
+employee_id = None
+
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect(
@@ -139,6 +141,8 @@ def init_db():
                 ON DELETE NO ACTION ON UPDATE NO ACTION
         );
     """)
+    cursor = db.execute("INSERT INTO [Employees] (LastName, FirstName) VALUES ('WEB', 'WEB')")
+    employee_id = cursor.lastrowid
     db.commit()
 
 @click.command('init-db')

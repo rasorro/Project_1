@@ -2,13 +2,26 @@
 
 {% block content %}
 <h1>Shop</h1>
-
-<form method="get">
+<form method="get" id="searchForm">
   <input type="text" name="search" placeholder="Search for a product with keyword"
-    value="{{ request.args.get('search', '') }}">
+    value="{{ request.args.get('search', '') }}" id="searchInput">
   <button type="submit">Search</button>
 </form>
-
+<script>
+  window.onload = function() {
+    let input = document.getElementById('searchInput')
+    input.focus();
+    let length = input.value.length;
+    input.setSelectionRange(length, length);
+  };
+  let timeout;
+  document.getElementById('searchInput').addEventListener('input', function() {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      document.getElementById('searchForm').submit();
+    }, 250);
+  });
+</script>
 <hr>
 
 {% if not search_query %}
