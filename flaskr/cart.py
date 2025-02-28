@@ -51,6 +51,9 @@ def checkout():
             'DELETE FROM Shopping_Cart WHERE shopperID = ?',
             (customer_id,)
         )
+        
+        db.execute("DELETE FROM Shopping_Cart WHERE added_at <= DATETIME('now', '-1 month')")
+
         db.commit()
 
         flash('Order placed successfully!')
