@@ -9,10 +9,11 @@ def test_register(client, app):
     )
     assert response.headers["Location"] == "/auth/login"
     with app.app_context():
-        assert get_db().execute(
+        db = get_db()
+        assert db.execute(
             "SELECT * FROM [Authentication] WHERE userID = 'ABCDE'",
         ).fetchone() is not None
-        assert get_db().execute(
+        assert db.execute(
             "SELECT * FROM [Customers] WHERE CustomerID = 'ABCDE'",
         ).fetchone() is not None
 
