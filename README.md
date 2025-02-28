@@ -5,7 +5,7 @@
 - **Robbie Rasor** – Team Lead
 - **Charlie Keough** – Development Engineer
 - **Max Montes Soza** – Test Engineer
-- **[Teammate 3]** - Documentation Specialist
+- **Grant Zobel** - Documentation Specialist
 - **Jacob Goodgame** - General Developer
 
 
