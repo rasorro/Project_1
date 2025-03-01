@@ -1,9 +1,29 @@
+"""
+Defines the `create_app` function, which initializes and configures
+a Flask application instance. It sets up the database, registers blueprints,
+and loads configuration settings.
+"""
+
 import os
 from flask import Flask
 
+from . import db
+from . import auth
+from . import shop
+from . import cart
 
-def create_app(test_config=None):
-    # create and configure the app
+def create_app(test_config=None) -> Flask:
+    """
+    Creates and configures the flask application
+
+    Parameters:
+        test_config : dict, optional
+            A dictionary of configuration settings for testing purposes.
+
+    Returns:
+        Flask
+       	    A configured Flask application instance.
+	"""
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
@@ -17,18 +37,14 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-    
-    from . import db
+
     db.init_app(app)
 
-    from . import auth
     app.register_blueprint(auth.bp)
 
-    from . import shop
     app.register_blueprint(shop.bp)
     app.add_url_rule('/', endpoint='index')
 
-    from . import cart
     app.register_blueprint(cart.bp)
     app.add_url_rule('/', endpoint='cart')
 
