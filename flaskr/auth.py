@@ -29,7 +29,7 @@ def register():
             if user_exists:
                 error = f"User {user_ID} is already registered."
         """
-        Need to update below , maybe some sort of authentication allowing them to
+        Can update below , maybe some sort of authentication allowing them to
         verify with other info in northwind database (e.g., postal code + phone)
         """
         if error is None:

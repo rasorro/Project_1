@@ -10,11 +10,8 @@
 
 
 ## Testing Approach
-We...:
-
-- **Unit Testing**: Text...
-- **Integration Testing**: Text...
-- **Test-Driven Development**: Text...
+- **Unit Testing**: Isolated tests for each function. Ensured all pages properly handle GET and / or POST requests and validate input as necessary.
+- **Test-Driven Development**: Followed Test-Driven Development for cart and shop, but tests were written after implementation of auth and db. If code pushed by devs failed tests, Test Engineer and Lead went back, examined, and refactored until all tests passed. This allowed for an opportunity to peer review each other's code.  
 
 ## Notable Features
 - Search bar updates while typing
