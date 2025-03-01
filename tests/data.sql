@@ -5,10 +5,10 @@ Values
 
 -- Add sample shopping cart data
 
-INSERT INTO [Shopping_Cart] (shopperID, ProductID, Quantity)
+INSERT INTO [Shopping_Cart] (shopperID, ProductID, Quantity, added_at)
 Values
-	('TEST1', 1, 1),
-	('OTHER', 2, 1);
+	('TEST1', 1, 1, '2025-02-28 10:00:00'),
+	('OTHER', 2, 1, '2024-10-01 11:00:00');
 
 INSERT INTO [Products] (ProductID, ProductName, CategoryID, QuantityPerUnit, UnitPrice)
 Values

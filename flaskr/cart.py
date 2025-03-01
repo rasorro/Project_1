@@ -1,10 +1,10 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, session
+    Blueprint, current_app, flash, g, redirect, render_template, request, url_for, session
 )
 from werkzeug.exceptions import abort
 
 from flaskr.auth import login_required
-from flaskr.db import get_db, employee_id
+from flaskr.db import get_db
 from datetime import datetime
 
 
@@ -48,7 +48,7 @@ def checkout():
         if error is None:
             db.execute(
             'INSERT INTO Orders (CustomerID, EmployeeID, OrderDate, ShipName, ShipAddress, ShipCity, ShipRegion, ShipPostalCode, ShipCountry) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            (customer_id, employee_id, order_date, ship_name, shipping_address, ship_city, ship_region, ship_postal_code, ship_country)
+            (customer_id, current_app.config.get('EMPLOYEE_ID'), order_date, ship_name, shipping_address, ship_city, ship_region, ship_postal_code, ship_country)
             )
             db.commit()
             db.execute(

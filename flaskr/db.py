@@ -3,8 +3,6 @@ from datetime import datetime
 import click
 from flask import current_app, g
 
-employee_id = None
-
 
 def get_db():
     if 'db' not in g:
@@ -144,9 +142,10 @@ def init_db():
                 ON DELETE NO ACTION ON UPDATE NO ACTION
         );
     """)
+    db.commit()
     cursor = db.execute("INSERT INTO [Employees] (LastName, FirstName) VALUES ('WEB', 'WEB')")
-    employee_id = cursor.lastrowid
-    if db.execute("SELECT COUNT(*) FROM PRODUCTS").fetchone()[0] == 0:
+    current_app.config['EMPLOYEE_ID'] = cursor.lastrowid
+    if not current_app.config['TESTING'] and db.execute("SELECT COUNT(*) FROM PRODUCTS").fetchone()[0] == 0:
         db.executescript("""
             INSERT INTO Products (ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued)
             VALUES(1, 'Chai', 1, 1, '10 boxes x 20 bags', 18, 39, 0, 10, 0);

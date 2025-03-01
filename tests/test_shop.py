@@ -29,3 +29,18 @@ def test_product_details(client, product_id, message):
         assert message in response.data
     else:
         assert response.status_code == 404
+        
+def test_product_details_add_to_cart_signed_out(client, app, auth):
+    response = client.post('/product/1', data={'quantity': 1})
+    assert b'Product added to cart successfully' in response.data
+    response = client.get('/cart')
+    assert b'Example item-1' in response.data
+    auth.login()
+    response = client.get('/cart')
+    assert b'Example item-1' in response.data
+    with app.app_context():
+        db = get_db()
+        cart = db.execute(
+            'SELECT * FROM [Shopping_Cart] WHERE shopperID = ?', ('TEST1',)
+        ).fetchone()
+        assert cart is not None
