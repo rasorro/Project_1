@@ -5,6 +5,7 @@ from flask import current_app, g
 
 employee_id = None
 
+
 def get_db():
     if 'db' not in g:
         g.db = sqlite3.connect(
@@ -14,10 +15,12 @@ def get_db():
         g.db.row_factory = sqlite3.Row
     return g.db
 
+
 def close_db(e=None):
     db = g.pop('db', None)
     if db is not None:
         db.close()
+
 
 def init_db():
     db = get_db()
@@ -29,7 +32,7 @@ def init_db():
         );
                      
         CREATE TABLE IF NOT EXISTS [Shopping_Cart] (
-            [cartID]TEXT PRIMARY KEY,
+            [cartID]INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             [shopperID]TEXT,
             [productID]TEXT NOT NULL REFERENCES [Products]([ProductID]),
             [quantity]INTEGER NOT NULL CHECK ([quantity] > 0),
@@ -145,19 +148,13 @@ def init_db():
     employee_id = cursor.lastrowid
     db.commit()
 
+
 @click.command('init-db')
 def init_db_command():
-    """Create necessary tables."""
     init_db()
     click.echo('Initialized the database.')
 
-@click.command('test-db')
-def test_db_command():
-    db = get_db()
-    result = db.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
-    print([row["name"] for row in result])
 
 def init_app(app):
     app.teardown_appcontext(close_db)
-    app.cli.add_command(test_db_command)
     app.cli.add_command(init_db_command)

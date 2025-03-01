@@ -5,7 +5,9 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 from flaskr.db import get_db
 
+
 bp = Blueprint('auth', __name__, url_prefix='/auth')
+
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
@@ -53,6 +55,7 @@ def register():
         flash(error)
     return render_template('auth/register.html')
 
+
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
@@ -68,11 +71,14 @@ def login():
         elif not check_password_hash(user['passwordHash'], password):
             error = 'Incorrect password.'
         if error is None:
+            db.execute('UPDATE Shopping_Cart SET shopperID = ? WHERE shopperID = ?', (user_id, session.get('userID')))
+            db.commit()
             session.clear()
             session['userID'] = user['userID']
             return redirect(url_for('index'))
         flash(error)
     return render_template('auth/login.html')
+
 
 @bp.before_app_request
 def load_logged_in_user():
@@ -84,10 +90,12 @@ def load_logged_in_user():
             'SELECT * FROM Authentication WHERE userID = ?', (user_id,)
         ).fetchone()
 
+
 @bp.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('index'))
+
 
 def login_required(view):
     @functools.wraps(view)

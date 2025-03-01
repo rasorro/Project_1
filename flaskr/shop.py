@@ -1,3 +1,4 @@
+import uuid
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
@@ -5,10 +6,13 @@ from werkzeug.exceptions import abort
 from flaskr.db import get_db
 from unidecode import unidecode
 
+
 bp = Blueprint('shop', __name__)
+
 
 def create_unidecode_function(db):
     db.create_function("unidecode", 1, unidecode)
+
 
 @bp.route('/')
 def browse_or_search():
@@ -40,10 +44,13 @@ def browse_or_search():
 
     return render_template('shop/browse_or_search.html', products=products, categories=categories, active_category=active_category, search_query=search_query)
 
+
 @bp.route('/product/<int:product_id>', methods=('GET', 'POST'))
 def product_details(product_id):
     db = get_db()
     if request.method == 'POST':
+        if 'userID' not in session:
+            session['userID'] = str(uuid.uuid4())
         quantity = int(request.form['quantity'])
         db.execute(
             'INSERT INTO [Shopping_Cart] (shopperID, productID, quantity) VALUES (?, ?, ?)',

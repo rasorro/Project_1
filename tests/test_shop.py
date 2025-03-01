@@ -2,6 +2,7 @@ import pytest
 from flask import g, session
 from flaskr.db import get_db
 
+
 @pytest.mark.parametrize(('category', 'search', 'message'), (
     ('', '', b'Products'),
     ('1', '', b'Products in Example category-1'),
@@ -13,6 +14,7 @@ def test_browse_or_search(client, category, search, message):
     response = client.get('/', query_string={'category': category, 'search' : search})
     assert response.status_code == 200
     assert message in response.data
+
 
 @pytest.mark.parametrize(('product_id', 'message'), (
     ('', b'No item provided'),

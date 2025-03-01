@@ -2,11 +2,17 @@ import pytest
 from flask import g, session
 from flaskr.db import get_db
 
+
 def test_cart(client, auth):
-    response = client.get('/cart/')
+    response = client.get('/cart')
     assert response.status_code == 200
     assert b'Cart' in response.data
-    # needs tests for cart items
+    assert b'Your cart is empty.' in response.data
+    auth.login()
+    response = client.get('/cart')
+    assert b'Example item-1' in response.data
+    assert b'Example item-2' not in response.data
+
 
 def test_checkout_get(client, auth):
     response = client.get('/cart/checkout')
@@ -17,18 +23,19 @@ def test_checkout_get(client, auth):
     assert response.status_code == 200
     assert b'Checkout' in response.data
 
-def test_checkout_post(client, auth, app):
+
+def test_checkout_post(client, app, auth):
     auth.login()
     response = client.post('/cart/checkout', data={
-        'shipping_name': 'Test User',
+        'ship_name': 'Test User',
         'shipping_address': '123 Test St',
-        'shipping_city': 'Boston',
-        'shipping_region': 'Massachusetts',
-        'shipping_postal_code': '12345',
-        'shipping_country': 'USA'
+        'ship_city': 'Boston',
+        'ship_region': 'Massachusetts',
+        'ship_postal_code': '12345',
+        'ship_country': 'USA'
     })
     assert response.status_code == 302
-    assert response.headers["Location"] == "/"
+    assert response.headers["Location"] == "/cart"
     with app.app_context():
         db = get_db()
         order = db.execute(
@@ -41,26 +48,38 @@ def test_checkout_post(client, auth, app):
         assert order['ShipPostalCode'] == '12345'
         assert order['ShipCountry'] == 'USA'
         cart = db.execute(
-            'SELECT * FROM [Shopping_Cart] WHERE ShipName = "Test User"'
+            'SELECT * FROM [Shopping_Cart] WHERE shopperID = "TEST1"'
         ).fetchone()
-        assert order is None
+        assert cart is None
+    
     
 @pytest.mark.parametrize(('shipping_name', 'shipping_address', 'shipping_city', 'shipping_region', 'shipping_postal_code', 'shipping_country' , 'message'), (
-    ('', '123 Test St', 'Boston', 'Massachussetts', '12345', 'USA', b'Shipping Name is required.'),
-    ('123 Test St', '', 'Boston', 'Massachussetts', '12345', 'USA', b'Shipping Address is required.'),
-    ('123 Test St', '123 Test St', '', 'Massachussetts', '12345', 'USA', b'Shipping City is required.'),
-    ('123 Test St', '123 Test St', 'Boston', '', '12345', 'USA', b'Shipping Region is required.'),
-    ('123 Test St', '123 Test St', 'Boston', 'Massachussetts', '', 'USA', b'Shipping Postal Code is required.'),
-    ('123 Test St', '123 Test St', 'Boston', 'Massachussetts', '12345', '', b'Shipping Country is required.'),
+    ('', '123 Test St', 'Boston', 'Massachussetts', '12345', 'USA', b'Please fill out all fields'),
+    ('123 Test St', '', 'Boston', 'Massachussetts', '12345', 'USA', b'Please fill out all fields'),
+    ('123 Test St', '123 Test St', '', 'Massachussetts', '12345', 'USA', b'Please fill out all fields'),
+    ('123 Test St', '123 Test St', 'Boston', '', '12345', 'USA', b'Please fill out all fields'),
+    ('123 Test St', '123 Test St', 'Boston', 'Massachussetts', '', 'USA', b'Please fill out all fields'),
+    ('123 Test St', '123 Test St', 'Boston', 'Massachussetts', '12345', '', b'Please fill out all fields'),
 ))
 def test_checkout_post_validate_input(client, auth, shipping_name, shipping_address, shipping_city, shipping_region, shipping_postal_code, shipping_country, message):
     auth.login()
     response = client.post('/cart/checkout', data={
-        'shipping_name': shipping_name,
+        'ship_name': shipping_name,
         'shipping_address': shipping_address,
-        'shipping_city': shipping_city,
-        'shipping_region': shipping_region,
-        'shipping_postal_code': shipping_postal_code,
-        'shipping_country': shipping_country
+        'ship_city': shipping_city,
+        'ship_region': shipping_region,
+        'ship_postal_code': shipping_postal_code,
+        'ship_country': shipping_country
     })
     assert message in response.data
+    
+
+def test_remove_item(client, auth):
+    auth.login()
+    response = client.get('/cart')
+    assert b'Example item-1' in response.data
+    response = client.post('/cart/remove/1')
+    assert response.status_code == 302
+    assert response.headers["Location"] == "/cart"
+    response = client.get('/cart')
+    assert b'Example item-1' not in response.data
