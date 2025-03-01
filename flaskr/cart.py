@@ -34,9 +34,6 @@ def checkout():
         ship_city = request.form['ship_city']
         ship_postal_code = request.form['ship_postal_code']
         ship_country = request.form['ship_country']
-        billing_address = request.form['billing_address']
-        card_number = request.form['card_number']
-        order_notes = request.form['order_notes']
 
         db.execute(
            'INSERT INTO Orders (CustomerID, EmployeeID, OrderDate, ShipAddress, ShipCity, ShipPostalCode, ShipCountry) VALUES (?, ?, ?, ?, ?, ?, ?)',
