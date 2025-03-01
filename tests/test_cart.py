@@ -25,19 +25,27 @@ def test_checkout_get(client, auth):
 
 
 def test_checkout_post(client, app, auth):
-    auth.login()
-    response = client.post('/cart/checkout', data={
-        'ship_name': 'Test User',
-        'shipping_address': '123 Test St',
-        'ship_city': 'Boston',
-        'ship_region': 'Massachusetts',
-        'ship_postal_code': '12345',
-        'ship_country': 'USA'
-    })
-    assert response.status_code == 302
-    assert response.headers["Location"] == "/cart"
-    with app.app_context():
+    auth.login()    
+    with app.app_context():  
         db = get_db()
+        expired_cart = db.execute(
+            'SELECT * FROM [Shopping_Cart] WHERE added_at <= DATETIME("now", "-1 month")'
+        ).fetchone()
+        assert expired_cart is not None
+        response = client.post('/cart/checkout', data={
+            'ship_name': 'Test User',
+            'shipping_address': '123 Test St',
+            'ship_city': 'Boston',
+            'ship_region': 'Massachusetts',
+            'ship_postal_code': '12345',
+            'ship_country': 'USA'
+        })
+        expired_cart = db.execute(
+            'SELECT * FROM [Shopping_Cart] WHERE added_at <= DATETIME("now", "-1 month")'
+        ).fetchone()
+        assert expired_cart is None
+        assert response.status_code == 302
+        assert response.headers["Location"] == "/cart"
         order = db.execute(
             'SELECT * FROM [Orders] WHERE ShipName = "Test User"'
         ).fetchone()
@@ -47,6 +55,13 @@ def test_checkout_post(client, app, auth):
         assert order['ShipRegion'] == 'Massachusetts'
         assert order['ShipPostalCode'] == '12345'
         assert order['ShipCountry'] == 'USA'
+        employee_id = order['EmployeeID']
+        assert employee_id is not None
+        employee_name = db.execute(
+            'SELECT * FROM [Employees] WHERE EmployeeID = ?',
+            (employee_id,)
+        ).fetchone()
+        assert employee_name['LastName'] == 'WEB'
         cart = db.execute(
             'SELECT * FROM [Shopping_Cart] WHERE shopperID = "TEST1"'
         ).fetchone()

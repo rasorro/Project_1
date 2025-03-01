@@ -19,7 +19,6 @@
 - Manual cart removal button
 
 ## Installation & Setup
-- Will need to update before we submit to have info for aviram + ta rather than for us
 
 ### **0. Clone the repository:**
 ```sh
