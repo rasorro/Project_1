@@ -6,7 +6,7 @@ import sqlite3
 import click
 from flask import current_app, g
 
-employee_id = None
+EMPLOYEE_ID = None
 
 def get_db() -> sqlite3.Connection:
     """
@@ -23,7 +23,8 @@ def get_db() -> sqlite3.Connection:
     return g.db
 
 
-def close_db(e = None):  # pylint: disable=invalid-name
+def close_db(exc = None):  # pylint: disable=unused-argument
+
     """
     Closes the database connection if it exists.
     """
