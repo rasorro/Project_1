@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Checkout{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="ship_name">Name</label>
+    <input type="text" id="ship_name" name="ship_name" required><br>
+
+    <label for="shipping_address">Shipping Address:</label>
+    <input type="text" id="shipping_address" name="shipping_address" required><br>
+
+    <label for="ship_city">City:</label>
+    <input type="text" id="ship_city" name="ship_city" required><br>
+
+    <label for="ship_region">Region:</label>
+    <input type="text" id="ship_region" name="ship_region" required><br>
+
+    <label for="ship_postal_code">Postal Code:</label>
+    <input type="text" id="ship_postal_code" name="ship_postal_code" required><br>
+
+    <label for="ship_country">Country:</label>
+    <input type="text" id="ship_country" name="ship_country" required><br>
+
+    <label for="order_notes">Order Notes:</label>
+    <textarea id="order_notes" name="order_notes"></textarea><br>
+
+    <button type="submit">Place Order</button>
+  </form>
+{% endblock %}
