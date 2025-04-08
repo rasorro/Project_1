@@ -1,10 +1,19 @@
+"""
+Provides functions to initialize and interact with the SQLite database
+"""
+
 import sqlite3
-from datetime import datetime
 import click
 from flask import current_app, g
 
+EMPLOYEE_ID = None
 
-def get_db():
+def get_db() -> sqlite3.Connection:
+    """
+    Retrieves a connection to the SQLite database. If a connection
+    does not already exist in the Flask 'g' context, it will create one
+    and set it there. Returns: sqlite3.Connection.
+    """
     if 'db' not in g:
         g.db = sqlite3.connect(
             current_app.config['DATABASE'],
@@ -14,14 +23,21 @@ def get_db():
     return g.db
 
 
-def close_db(e=None):
-    db = g.pop('db', None)
+def close_db(exc = None):  # pylint: disable=unused-argument
+
+    """
+    Closes the database connection if it exists.
+    """
+    db = g.pop('db', None) # pylint: disable=invalid-name
     if db is not None:
         db.close()
 
 
 def init_db():
-    db = get_db()
+    """
+    Initializes the database by creating the necessary tables if they do not exist.
+    """
+    db = get_db() # pylint: disable=invalid-name
     db.executescript("""
         CREATE TABLE IF NOT EXISTS [Authentication] (
             [userID]TEXT PRIMARY KEY REFERENCES [Customers]([CustomerID]) ON DELETE CASCADE,
@@ -142,10 +158,7 @@ def init_db():
                 ON DELETE NO ACTION ON UPDATE NO ACTION
         );
     """)
-    db.commit()
-    cursor = db.execute("INSERT INTO [Employees] (LastName, FirstName) VALUES ('WEB', 'WEB')")
-    current_app.config['EMPLOYEE_ID'] = cursor.lastrowid
-    if not current_app.config['TESTING'] and db.execute("SELECT COUNT(*) FROM PRODUCTS").fetchone()[0] == 0:
+    if db.execute("SELECT COUNT(*) FROM PRODUCTS").fetchone()[0] == 0:
         db.executescript("""
             INSERT INTO Products (ProductID, ProductName, SupplierID, CategoryID, QuantityPerUnit, UnitPrice, UnitsInStock, UnitsOnOrder, ReorderLevel, Discontinued)
             VALUES(1, 'Chai', 1, 1, '10 boxes x 20 bags', 18, 39, 0, 10, 0);
@@ -307,10 +320,18 @@ def init_db():
 
 @click.command('init-db')
 def init_db_command():
+    """
+    Allows the user to initialize the database. It calls the `init_db` function to set up
+    the necessary tables and insert default data.
+    """
     init_db()
     click.echo('Initialized the database.')
 
 
 def init_app(app):
+    """
+    Initializes the Flask application by setting up database teardown and CLI commands.
+    Args: app (Flask): The Flask application instance.
+    """
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
