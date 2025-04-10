@@ -6,3 +6,4 @@ tests/__pycache__/
 .vscode/
 .pytest_cache/
 .coverage
+.DS_Store
