@@ -1,0 +1,31 @@
+﻿User (ID, Name, Email, Affiliation, College)
+* Name must be unique and not null
+* Email must be unique and not null
+* Affiliation must be 'student', 'alumnus', or 'resident'
+
+
+Category (ID, Name, Description)
+* Name must be unique and not null
+
+
+ActivityGroup (ID, Name, Description, Website, ContactName, Email, Address, CategoryID, AffiliatedWithCollege, College, RequiresDues, SkillLevel)
+* Name must be not null
+* SkillLevel (Must be ‘beginner’, ‘intermediate’, or ‘advanced’),
+* Foreign Key (CategoryID) references Category(ID)
+
+
+Event (EventID, GroupID, Name, Location, Description, Date, StartTime, EndTime, Frequency)
+* Foreign Key (GroupID) references ActivityGroup(ID) not null
+* Name must be not null
+* Date must be not null
+
+
+Membership ((UserID, GroupID), Role, JoinDate)
+* Foreign Key (UserID) references User(ID),
+* Foreign Key (GroupID) references ActivityGroup(ID)
+* Role must be 'member' or 'organizer'
+
+
+UserInterest ((UserID, CategoryID))
+* Foreign Key (UserID) references User(ID),
+* Foreign Key (CategoryID) references Category(ID)
