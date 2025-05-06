@@ -1,10 +1,22 @@
-.venv/
-__pycache__/
+# Python virtual environment
+P1/.venv/
+
+# Python bytecode
+P1/flaskr/__pycache__/
+P1/tests/__pycache__/
 *.py[cod]
-flaskr/__pycache__/
-tests/__pycache__/
+
+# Pytest cache
+P1/.pytest_cache/
+
+# IDE-specific files
 .vscode/
-.pytest_cache/
+
+# Coverage reports
 .coverage
+
+# macOS-specific files
 .DS_Store
+
+# SQLite database files
 *.db
