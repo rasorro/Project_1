@@ -8,27 +8,23 @@ from flask import current_app, g
 
 EMPLOYEE_ID = None
 
-def get_db() -> sqlite3.Connection:
+def get_db(database='DATABASE'):
     """
-    Retrieves a connection to the SQLite database. If a connection
-    does not already exist in the Flask 'g' context, it will create one
-    and set it there. Returns: sqlite3.Connection.
+    Get a database connection. Defaults to the main database ('DATABASE').
+    Use 'P3_DATABASE' for the secondary database.
     """
     if 'db' not in g:
         g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
+            current_app.config[database],
             detect_types=sqlite3.PARSE_DECLTYPES
         )
         g.db.row_factory = sqlite3.Row
     return g.db
 
 
-def close_db(exc = None):  # pylint: disable=unused-argument
+def close_db(e=None):
+    db = g.pop('db', None)
 
-    """
-    Closes the database connection if it exists.
-    """
-    db = g.pop('db', None) # pylint: disable=invalid-name
     if db is not None:
         db.close()
 
