@@ -1,13 +1,17 @@
 # Python virtual environment
 P1/.venv/
+P3/.venv/
 
 # Python bytecode
 P1/flaskr/__pycache__/
 P1/tests/__pycache__/
+P3/flaskr/__pycache__/
+P3/tests/__pycache__/
 *.py[cod]
 
 # Pytest cache
 P1/.pytest_cache/
+P3/.pytest_cache/
 
 # IDE-specific files
 .vscode/
