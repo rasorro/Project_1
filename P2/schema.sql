@@ -30,11 +30,11 @@ CREATE TABLE ActivityGroup (
 
 CREATE TABLE Event (
     EventID INTEGER PRIMARY KEY,
-    GroupID INTEGER,
+    GroupID INTEGER NOT NULL,
     Name TEXT NOT NULL,
     Location TEXT,
     Description TEXT,
-    Date TEXT,
+    Date TEXT NOT NULL,
     StartTime TEXT,
     EndTime TEXT,
     Frequency TEXT,
