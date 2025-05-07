@@ -116,7 +116,6 @@ def init_db():
 (14, 'Nina Rossi', 'nina.rossi@example.com', 'alumnus', 'Massachusetts College of Art and Design'),
 (15, 'Oscar Rivera', 'oscar.rivera@example.com', 'resident', NULL);
 
--- INSERTS FOR Category
 INSERT INTO Category (ID, Name, Description) VALUES
 (1, 'Sports', 'Athletic and recreational activities'),
 (2, 'Music', 'Musical performance and appreciation groups'),
@@ -126,7 +125,6 @@ INSERT INTO Category (ID, Name, Description) VALUES
 (6, 'Cooking', 'Culinary groups and cooking clubs'),
 (7, 'Outdoors', 'Outdoor recreation and nature activities');
 
--- INSERTS FOR ActivityGroup
 INSERT INTO ActivityGroup (ID, Name, Description, Website, ContactUserID, Email, Address, CategoryID, AffiliatedWithCollege, College, RequiresDues, SkillLevel) VALUES
 (1, 'Boston Runners', 'A running club for all levels', 'http://bostonrunners.org', 1, 'alice.johnson@example.com', '123 Boylston St, Boston, MA', 1, TRUE, 'Boston University', TRUE, 'intermediate'),
 (2, 'Tech Innovators', 'A club for technology enthusiasts', 'http://techinnovators.com', 2, 'bob.smith@example.com', '456 Massachusetts Ave, Boston, MA', 3, TRUE, 'Northeastern University', FALSE, 'advanced'),
@@ -139,7 +137,6 @@ INSERT INTO ActivityGroup (ID, Name, Description, Website, ContactUserID, Email,
 (9, 'Symphony Society', 'Classical music appreciation and performance', 'http://symphonysociety.org', 9, 'isabel.torres@example.com', '111 Huntington Ave, Boston, MA', 2, TRUE, 'Boston College', TRUE, 'advanced'),
 (10, 'Volunteer Heroes', 'Helping underserved communities', 'http://volunteerheroes.org', 10, 'jake.martin@example.com', '333 Washington St, Boston, MA', 4, FALSE, NULL, FALSE, 'beginner');
 
--- INSERTS FOR Event
 INSERT INTO Event (EventID, GroupID, Name, Location, Description, Date, StartTime, EndTime, Frequency) VALUES
 (1, 1, 'Weekly Long Run', 'Boston Common', 'Sunday morning long run', '2025-05-11', '08:00', '10:30', 'weekly'),
 (2, 2, 'Hackathon', 'MIT Media Lab', '24-hour coding event', '2025-06-01', '10:00', '10:00', 'annual'),
@@ -152,7 +149,6 @@ INSERT INTO Event (EventID, GroupID, Name, Location, Description, Date, StartTim
 (9, 9, 'Chamber Concert', 'Jordan Hall', 'Evening chamber music concert', '2025-07-15', '19:30', '21:30', 'annual'),
 (10, 10, 'Food Drive', 'Boston Food Bank', 'Volunteer to collect and sort donations', '2025-05-30', '10:00', '14:00', 'monthly');
 
--- INSERTS FOR Membership
 INSERT INTO Membership (Role, JoinDate, UserID, GroupID) VALUES
 ('member', '2025-01-10', 1, 1),
 ('organizer', '2024-09-05', 2, 2),
@@ -170,7 +166,6 @@ INSERT INTO Membership (Role, JoinDate, UserID, GroupID) VALUES
 ('member', '2025-02-18', 14, 5),
 ('member', '2025-03-27', 15, 3);
 
--- INSERTS FOR UserInterest
 INSERT INTO UserInterest (UserID, CategoryID) VALUES
 (1, 1),
 (1, 3),
