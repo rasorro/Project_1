@@ -8,14 +8,14 @@ from flask import current_app, g
 
 EMPLOYEE_ID = None
 
-def get_db():
+def get_db(database='P1_DATABASE'):
     """
     Get a database connection. Defaults to the main database ('DATABASE').
     Use 'P3_DATABASE' for the secondary database.
     """
     if 'db' not in g:
         g.db = sqlite3.connect(
-            current_app.config['DATABASE'],
+            current_app.config[database],
             detect_types=sqlite3.PARSE_DECLTYPES
         )
         g.db.row_factory = sqlite3.Row
