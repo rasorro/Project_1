@@ -1,15 +1,10 @@
-CREATE TABLE Authentication (
-    UserID TEXT PRIMARY KEY REFERENCES User(ID) ON DELETE CASCADE,
-    PasswordHash TEXT NOT NULL,
-    SessionID Text
-);
-
 CREATE TABLE User (
     ID INTEGER PRIMARY KEY,
     Name TEXT NOT NULL,
     Email TEXT UNIQUE NOT NULL,
     Affiliation TEXT CHECK (Affiliation IN ('student', 'alumnus', 'resident')),
-    College TEXT
+    College TEXT CHECK ((Affiliation = 'resident' AND College IS NULL) OR
+        (Affiliation != 'resident' AND College IN ('Boston University', 'Northeastern University', 'Harvard University', 'Massachusetts Institute of Technology', 'Boston College', 'Emerson College', 'Suffolk University', 'Berklee College of Music', 'Simmons University', 'Wentworth Institute of Technology', 'University of Massachusetts Boston', 'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design')))
 );
 
 CREATE TABLE Category (
@@ -23,12 +18,13 @@ CREATE TABLE ActivityGroup (
     Name TEXT NOT NULL,
     Description TEXT,
     Website TEXT,
-    ContactName TEXT,
-    Email TEXT,
+	ContactUserID INTEGER REFERENCES User(ID) ON DELETE SET NULL,
+    Email TEXT REFERENCES User(Email) ON DELETE SET NULL,
     Address TEXT,
     CategoryID INTEGER,
     AffiliatedWithCollege BOOLEAN,
-    College TEXT,
+    College TEXT CHECK ((AffiliatedWithCollege = TRUE AND College IN ('Boston University', 'Northeastern University', 'Harvard University', 'Massachusetts Institute of Technology', 'Boston College', 'Emerson College', 'Suffolk University', 'Berklee College of Music', 'Simmons University', 'Wentworth Institute of Technology', 'University of Massachusetts Boston', 'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design')) 
+OR (AffiliatedWithCollege = FALSE AND College IS NULL)),
     RequiresDues BOOLEAN,
     SkillLevel TEXT CHECK (SkillLevel IN ('beginner', 'intermediate', 'advanced')),
     FOREIGN KEY (CategoryID) REFERENCES Category(ID) ON DELETE SET NULL
@@ -36,33 +32,28 @@ CREATE TABLE ActivityGroup (
 
 CREATE TABLE Event (
     EventID INTEGER PRIMARY KEY,
-    GroupID INTEGER NOT NULL,
+    GroupID INTEGER NOT NULL REFERENCES ActivityGroup(ID) ON DELETE CASCADE,
     Name TEXT NOT NULL,
     Location TEXT,
     Description TEXT,
-    Date TEXT NOT NULL,
-    StartTime TEXT,
-    EndTime TEXT,
-    Frequency TEXT,
-    FOREIGN KEY (GroupID) REFERENCES ActivityGroup(ID) ON DELETE CASCADE
+    Date DATE NOT NULL,
+    StartTime TIME,
+    EndTime TIME,
+    Frequency TEXT
 );
 
 -- MEMBERSHIP TABLE (user ↔ activity group, includes role + join date)
 CREATE TABLE Membership (
-    UserID INTEGER,
-    GroupID INTEGER,
     Role TEXT CHECK (Role IN ('member', 'organizer')),
-    JoinDate TEXT,
-    PRIMARY KEY (UserID, GroupID),
-    FOREIGN KEY (UserID) REFERENCES User(ID) ON DELETE CASCADE,
-    FOREIGN KEY (GroupID) REFERENCES ActivityGroup(ID) ON DELETE CASCADE
+    JoinDate DATE,
+    UserID INTEGER REFERENCES User(ID) ON DELETE CASCADE,
+    GroupID INTEGER REFERENCES ActivityGroup(ID) ON DELETE CASCADE,
+	PRIMARY KEY (UserID, GroupID)
 );
 
 -- USER INTERESTS TABLE (user ↔ category)
 CREATE TABLE UserInterest (
-    UserID INTEGER,
-    CategoryID INTEGER,
-    PRIMARY KEY (UserID, CategoryID),
-    FOREIGN KEY (UserID) REFERENCES User(ID) ON DELETE CASCADE,
-    FOREIGN KEY (CategoryID) REFERENCES Category(ID) ON DELETE CASCADE
+    UserID INTEGER REFERENCES User(ID) ON DELETE CASCADE,
+    CategoryID INTEGER REFERENCES Category(ID) ON DELETE CASCADE,
+	PRIMARY KEY (UserID, CategoryID)
 );
