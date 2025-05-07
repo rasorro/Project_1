@@ -38,7 +38,7 @@ python3 -m venv .venv
     ```
 - On **Windows**
     ```sh
-    .venv\scripts\activate
+    source .venv/Scripts/activate
     ```
 ### **3. Install Dependencies**
 ```sh
@@ -53,7 +53,7 @@ pip freeze > requirements.txt
 
 ### Running the Application
 ```sh
-flask --app flaskr run
+flask --app app run
 ```
 
 ### Running the Tests

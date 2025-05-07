@@ -1,5 +1,5 @@
 [project]
-name = "flaskr"
+name = "app"
 version = "1.0.0"
 description = "To be completed..."
 dependencies = [
@@ -15,4 +15,4 @@ testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true
-source = ["flaskr"]
+source = ["app"]
