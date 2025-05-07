@@ -75,7 +75,7 @@ def checkout() -> Response:
             db.execute("DELETE FROM Shopping_Cart WHERE added_at <= DATETIME('now', '-1 month')")
             db.commit()
             flash('Order placed successfully!')
-            return redirect(url_for('cart.cart'))
+            return redirect(url_for('membership.cart'))
         flash(error)
     return render_template('cart/checkout.html')
 
@@ -95,4 +95,4 @@ def remove_item(product_id) -> Response:
     )
     db.commit()
     flash('Item removed from cart!')
-    return redirect(url_for('cart.cart'))
+    return redirect(url_for('membership.cart'))
