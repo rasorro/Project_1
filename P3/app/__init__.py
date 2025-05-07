@@ -9,8 +9,8 @@ from flask import Flask
 
 from . import db
 from . import auth
-from . import shop
-from . import cart
+from . import events
+from . import membership
 
 def create_app(test_config=None) -> Flask:
     """
@@ -27,8 +27,7 @@ def create_app(test_config=None) -> Flask:
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'northwind.db'),
-        P3_DATABASE=os.path.join(app.instance_path, 'p3_database.db'),
+        DATABASE=os.path.join(app.instance_path, 'p3_database.db'),
     )
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
@@ -42,11 +41,9 @@ def create_app(test_config=None) -> Flask:
     db.init_app(app)
 
     app.register_blueprint(auth.bp)
+    app.register_blueprint(events.bp)
+    app.register_blueprint(membership.bp)
 
-    app.register_blueprint(shop.bp)
     app.add_url_rule('/', endpoint='index')
-
-    app.register_blueprint(cart.bp)
-    app.add_url_rule('/', endpoint='cart')
 
     return app

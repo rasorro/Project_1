@@ -24,10 +24,12 @@ def register() -> str:
     """
 
     if request.method == 'POST':
-        user_id = request.form['username'].upper()
+        user_id = request.form['username'].upper()        
         password = request.form['password']
+        
         db = get_db() # pylint: disable=invalid-name
         error = None
+        
         if not user_id:
             error = 'Username is required.'
         elif len(user_id) !=5:
