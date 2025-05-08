@@ -42,7 +42,7 @@ INSERT INTO Event (EventID, GroupID, Name, Location, Description, Date, StartTim
 (3, 3, 'Community Cleanup', 'Charles River Esplanade', 'Help clean up the riverbank', '2025-05-15', '09:00', '12:00', 'Monthly'),
 (4, 4, 'Jazz Night', 'Scullers Jazz Club', 'Evening jazz performance', '2025-05-20', '19:00', '22:00', 'Monthly'),
 (5, 5, 'Spring Hike', 'Blue Hills Reservation', 'Group hike to enjoy nature', '2025-05-22', '09:00', '15:00', 'Quarterly'),
-(6, 6, 'Cooking Workshop', 'Boston Public Market', 'Learn to make pasta', '2025-06-10', '17:00', '19:00', 'Qonthly'),
+(6, 6, 'Cooking Workshop', 'Boston Public Market', 'Learn to make pasta', '2025-06-10', '17:00', '19:00', 'Monthly'),
 (7, 7, 'Gallery Showcase', 'ICA Boston', 'Showcase of member artwork', '2025-06-18', '18:00', '21:00', 'Quarterly'),
 (8, 8, 'Python Bootcamp', 'Tufts Computer Lab', 'Two-day intensive Python course', '2025-07-01', '09:00', '17:00', 'Semiannual'),
 (9, 9, 'Chamber Concert', 'Jordan Hall', 'Evening chamber music concert', '2025-07-15', '19:30', '21:30', 'Annual'),
