@@ -36,7 +36,7 @@
     <ul>
       {% for event in events %}
         <li>
-          <strong><a href="{{ url_for('events.detail', event_id=event.EventID) }}">{{ event.Name }}</a></strong><br>
+          <strong><a href="{{ url_for('events.event_details', event_id=event.EventID) }}">{{ event.Name }}</a></strong><br>
           {{ event.Date }} @ {{ event.StartTime or "TBD" }}<br>
           Group: {{ event.GroupName }}<br>
           Category: {{ event.CategoryName }}

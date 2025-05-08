@@ -165,7 +165,7 @@ def create_group():
         address = request.form['address']
         category_id = request.form['category_id']
         affiliated = request.form.get('affiliated') == 'on'
-        college = request.form['college']
+        college = request.form['college'] if affiliated else None
         requires_dues = request.form.get('requires_dues') == 'on'
         skill_level = request.form['skill_level']
 
@@ -173,24 +173,33 @@ def create_group():
         
         if not name:
             error = 'Group name is required.'
+            
+        if affiliated and not college:
+            error = 'College is required for affiliated groups.'
 
         if error is None:
             try:
-                db.execute(
-                    'INSERT INTO ActivityGroup (Name, Description, Website, ContactName, Email, Address, CategoryID, AffiliatedWithCollege, College, RequiresDues, SkillLevel) VALUES (?, ?, ?)',
-                    (name, description, website, address, category_id, affiliated, college, requires_dues, skill_level)
-                )
-                
+                db.execute("""
+                    INSERT INTO ActivityGroup
+                        (Name, Description, Website, ContactUserID, Email, Address, CategoryID,
+                         AffiliatedWithCollege, College, RequiresDues, SkillLevel)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    name, description, website, g.user['ID'], g.user['Email'], address,
+                    category_id, affiliated, college, requires_dues, skill_level
+                ))
+
                 group_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
+
                 db.execute("""
                     INSERT INTO Membership (UserID, GroupID, Role, JoinDate)
                     VALUES (?, ?, 'organizer', ?)
                 """, (g.user['ID'], group_id, datetime.now().date()))
-                
+
                 db.commit()
                 flash('Group created successfully.')
-                return redirect(url_for('groups.detail', group_id=group_id))
-            
+                return redirect(url_for('groups.group_details', group_id=group_id))
+
             except db.IntegrityError:
                 error = 'Failed to create group.'
         

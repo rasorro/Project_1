@@ -15,12 +15,6 @@
     <label for="website">Website</label>
     <input type="url" name="website" id="website">
 
-    <label for="contact_name">Contact Name</label>
-    <input type="text" name="contact_name" id="contact_name">
-
-    <label for="email">Contact Email</label>
-    <input type="email" name="email" id="email">
-
     <label for="address">Address</label>
     <input type="text" name="address" id="address">
 
@@ -32,12 +26,12 @@
     </select>
 
     <label>
-      <input type="checkbox" name="affiliated">
-      Affiliated with College
+      <input type="checkbox" name="affiliated" id="affiliated" onchange="toggleCollege(this)">
+      Affiliated with a College
     </label>
 
     <label for="college">College</label>
-    <input type="text" name="college" id="college">
+    <input type="text" name="college" id="college" placeholder="e.g. Boston University">
 
     <label>
       <input type="checkbox" name="requires_dues">
@@ -53,4 +47,18 @@
 
     <input type="submit" value="Create Group">
   </form>
+
+  <script>
+    function toggleCollege(box) {
+      const collegeInput = document.getElementById('college');
+      collegeInput.disabled = !box.checked;
+      if (!box.checked) {
+        collegeInput.value = '';
+      }
+    }
+
+    window.onload = () => {
+      toggleCollege(document.getElementById('affiliated'));
+    };
+  </script>
 {% endblock %}

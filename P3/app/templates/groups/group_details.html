@@ -48,8 +48,8 @@
     <ul>
       {% for event in events %}
         <li>
-          <a href="{{ url_for('events.detail', event_id=event.EventID) }}">{{ event.Name }}</a><br>
-          {{ event.Date }} {{ event.StartTime or "TBD" }} – {{ event.EndTime or "TBD" }}<br>
+          <a href="{{ url_for('events.event_details', event_id=event.EventID) }}">{{ event.Name }}</a><br>
+          {{ event.Date }} {{ event.StartTime or "TBD" }} - {{ event.EndTime or "TBD" }}<br>
           {{ event.Location or "No location" }}
         </li>
       {% endfor %}
@@ -65,9 +65,9 @@
     <ul>
       {% for member in members %}
         <li>
-          {{ member.Name }} ({{ member.Role }}) – joined {{ member.JoinDate }}
+          {{ member.Name }} ({{ member.Role }}) - joined {{ member.JoinDate }}
           {% if member.Email %}
-            – <a href="mailto:{{ member.Email }}">{{ member.Email }}</a>
+            - <a href="mailto:{{ member.Email }}">{{ member.Email }}</a>
           {% endif %}
         </li>
       {% endfor %}
