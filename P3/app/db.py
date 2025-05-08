@@ -98,7 +98,8 @@ def init_db():
         PRIMARY KEY ([UserID], [CategoryID])
     );
     """)
-    db.executescript("""
+    if db.execute("SELECT COUNT(*) FROM User").fetchone()[0] == 0:
+        db.executescript("""
         INSERT INTO User (ID, Name, Email, Affiliation, College) VALUES
 (1, 'Alice Johnson', 'alice.johnson@example.com', 'student', 'Boston University'),
 (2, 'Bob Smith', 'bob.smith@example.com', 'alumnus', 'Northeastern University'),
@@ -186,9 +187,6 @@ INSERT INTO UserInterest (UserID, CategoryID) VALUES
 (15, 4);
     """)
     db.commit()
-    
-    with current_app.open_resource('schema.sql') as f:
-        db.executescript(f.read().decode('utf8'))
 
 @click.command('init-db')
 def init_db_command():
