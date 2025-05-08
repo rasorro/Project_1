@@ -138,7 +138,7 @@ def test_create_event_failure(client, auth, app):
     response = client.post(
     f'/create/?group_id={group_id}',
     data={
-        'name': '',  # Intentionally blank to test validation
+        'name': '',
         'description': 'Test Event',
         'date': '2025-12-12',
         'start_time': '',
