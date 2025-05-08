@@ -20,9 +20,7 @@
         <select name="category_id" id="category_id">
           <option value="">All Categories</option>
           {% for cat in categories %}
-            <option value="{{ cat.ID }}" {% if cat.ID == category_id|int %}selected{% endif %}>
-              {{ cat.Name }}
-            </option>
+            <option value="{{ cat.ID }}" {% if cat.ID == category_id|int %}selected{% endif %}>{{ cat.Name }}</option>
           {% endfor %}
         </select>
       </div>
@@ -32,9 +30,7 @@
         <select name="group_id" id="group_id">
           <option value="">All Groups</option>
           {% for group in groups %}
-            <option value="{{ group.ID }}" {% if group.ID == group_id|int %}selected{% endif %}>
-              {{ group.Name }}
-            </option>
+            <option value="{{ group.ID }}" {% if group.ID == group_id|int %}selected{% endif %}>{{ group.Name }}</option>
           {% endfor %}
         </select>
       </div>
@@ -44,9 +40,7 @@
         <select name="college" id="college">
           <option value="">All Colleges</option>
           {% for row in colleges %}
-            <option value="{{ row.College }}" {% if row.College == college %}selected{% endif %}>
-              {{ row.College }}
-            </option>
+            <option value="{{ row.College }}" {% if row.College == college %}selected{% endif %}>{{ row.College }}</option>
           {% endfor %}
         </select>
       </div>
@@ -56,9 +50,7 @@
         <select name="SkillLevel" id="skill_level">
           <option value="">All Levels</option>
           {% for row in skill_levels %}
-            <option value="{{ row.SkillLevel }}" {% if row.SkillLevel == skill_level %}selected{% endif %}>
-              {{ row.SkillLevel }}
-            </option>
+            <option value="{{ row.SkillLevel }}" {% if row.SkillLevel == skill_level %}selected{% endif %}>{{ row.SkillLevel }}</option>
           {% endfor %}
         </select>
       </div>
@@ -70,14 +62,14 @@
   </form>
 
   {% if events %}
-    <div class="event-cards">
+    <div class="event-cards" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
       {% for event in events %}
-        <div class="event-card">
-          <div class="event-header">
-            <h2><a href="{{ url_for('events.event_details', event_id=event.EventID) }}">{{ event.Name }}</a></h2>
-            <p class="event-time">{{ event.Date }} @ {{ event.StartTime or "TBD" }}</p>
+        <div class="event-card" style="border: 1px solid #ccc; border-radius: 12px; padding: 1rem; background-color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+          <div class="event-header" style="margin-bottom: 0.5rem;">
+            <h2 style="margin: 0 0 0.25rem 0; font-size: 1.25rem;"><a href="{{ url_for('events.event_details', event_id=event.EventID) }}">{{ event.Name }}</a></h2>
+            <p class="event-time" style="color: gray; font-size: 0.9rem;">📅 {{ event.Date }} @ 🕒 {{ event.StartTime or "TBD" }}</p>
           </div>
-          <div class="event-details">
+          <div class="event-details" style="font-size: 0.95rem;">
             <p><strong>Group:</strong> {{ event.GroupName }}</p>
             <p><strong>Category:</strong> {{ event.CategoryName }}</p>
           </div>
