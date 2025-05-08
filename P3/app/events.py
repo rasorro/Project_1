@@ -1,7 +1,3 @@
-"""
-Handles the browsing and searching functionality for products in the shop.
-"""
-
 import uuid
 from flask import (
     Blueprint, flash, g, render_template, request, session, Response, redirect, url_for

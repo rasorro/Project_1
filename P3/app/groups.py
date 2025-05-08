@@ -317,3 +317,4 @@ def delete_group(group_id):
         flash("Group deletion failed due to database constraints.")
 
     return redirect(url_for('groups.my_groups'))
+
