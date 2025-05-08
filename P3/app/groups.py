@@ -288,3 +288,33 @@ def create_group():
 
     categories = db.execute('SELECT ID, Name FROM Category').fetchall()
     return render_template('groups/create_group.html', categories=categories)
+
+@bp.route('/delete/<int:group_id>', methods=['POST'])
+@login_required
+def delete_group(group_id):
+    """
+    Deletes a group if the current user is its organizer.
+    """
+    db = get_db()
+    user_id = g.user['ID']
+
+    role = db.execute(
+        """
+        SELECT Role FROM Membership
+        WHERE UserID = ? AND GroupID = ?
+        """,
+        (user_id, group_id)
+    ).fetchone()
+
+    if role is None or role['Role'] != 'Organizer':
+        flash("You are not authorized to delete this group.")
+        return redirect(url_for('groups.group_details', group_id=group_id))
+
+    try:
+        db.execute("DELETE FROM ActivityGroup WHERE ID = ?", (group_id,))
+        db.commit()
+        flash("Group deleted successfully.")
+    except db.IntegrityError:
+        flash("Group deletion failed due to database constraints.")
+
+    return redirect(url_for('groups.my_groups'))
