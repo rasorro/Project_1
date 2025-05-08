@@ -32,23 +32,6 @@
     <input type="submit" value="Apply Filters">
   </form>
 
-  <script>
-    window.onload = function () {
-      let input = document.getElementById('search');
-      input.focus();
-      let length = input.value.length;
-      input.setSelectionRange(length, length);
-    };
-  
-    let timeout;
-    document.getElementById('search').addEventListener('input', function () {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        document.getElementById('searchForm').submit();
-      }, 800);
-    });
-  </script>
-
   {% if events %}
     <ul>
       {% for event in events %}

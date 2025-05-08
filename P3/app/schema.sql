@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXIST [Authentication] (
+CREATE TABLE IF NOT EXISTS [Authentication] (
     [UserID] INTEGER PRIMARY KEY REFERENCES User(ID) ON DELETE CASCADE,
     [PasswordHash] TEXT NOT NULL,
     [SessionID] Text
