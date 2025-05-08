@@ -1,6 +1,5 @@
 """
-Handles the shopping cart functionality, including viewing the cart,
-checking out, and removing items from the cart.
+Handles the activity groups.
 """
 
 from datetime import datetime, timezone
@@ -36,7 +35,7 @@ def join_group(group_id):
     else:
         db.execute(
             'INSERT INTO Membership (UserID, GroupID, Role, JoinDate) VALUES (?, ?, ?, ?)',
-            (user_id, group_id, 'member',  datetime.now(timezone.utc).date())
+            (user_id, group_id, 'Member',  datetime.now(timezone.utc).date())
         )
         db.commit()
         flash('You successfully joined the group.')
@@ -92,7 +91,7 @@ def my_groups():
     return render_template('groups/my_groups.html', groups=groups)
 
 
-@bp.route('/groups/<int:group_id>')
+@bp.route('/<int:group_id>')
 def group_details(group_id):
     """
     Displays the details of a specific group.
@@ -207,7 +206,7 @@ def create_group():
                 db.execute("""
                     INSERT INTO Membership (UserID, GroupID, Role, JoinDate)
                     VALUES (?, ?, 'organizer', ?)
-                """, (g.user['ID'], group_id, datetime.now().date()))
+                """, (g.user['ID'], group_id, datetime.now(timezone.utc).date()))
 
                 db.commit()
                 flash('Group created successfully.')
