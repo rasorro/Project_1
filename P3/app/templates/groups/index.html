@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>Browse Activity Groups</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="get" id="searchForm">
+    <label for="search">Search</label>
+    <input type="text" name="search" id="search" value="{{ search or '' }}" placeholder="Search groups...">
+
+    <label for="category_id">Category</label>
+    <select name="category_id" id="category_id">
+      <option value="">-- All Categories --</option>
+      {% for cat in categories %}
+        <option value="{{ cat.ID }}" {% if cat.ID == category_id|int %}selected{% endif %}>
+          {{ cat.Name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label for="college">College</label>
+    <select name="college" id="college">
+      <option value="">-- All Colleges --</option>
+      {% for row in colleges %}
+        <option value="{{ row.College }}" {% if row.College == college %}selected{% endif %}>
+          {{ row.College }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label for="skill_level">Skill Level</label>
+    <select name="skill_level" id="skill_level">
+      <option value="">-- All Skill Levels --</option>
+      {% for level in skill_levels %}
+        <option value="{{ level.SkillLevel }}" {% if level.SkillLevel == skill_level %}selected{% endif %}>
+          {{ level.SkillLevel }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <input type="submit" value="Apply Filters">
+  </form>
+
+  {% if groups %}
+    <ul>
+      {% for group in groups %}
+        <li>
+          <strong><a href="{{ url_for('groups.group_details', group_id=group.ID) }}">{{ group.Name }}</a></strong><br>
+          {{ group.Description or "No description provided." }}<br>
+          {% if group.AffiliatedWithCollege %}
+            Affiliated College: {{ group.College }}
+          {% else %}
+            Not affiliated with a college
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No groups match your criteria.</p>
+  {% endif %}
+{% endblock %}

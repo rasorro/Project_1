@@ -1,5 +1,6 @@
 """
-Handles the activity groups.
+Handles the shopping cart functionality, including viewing the cart,
+checking out, and removing items from the cart.
 """
 
 from datetime import datetime, timezone
@@ -10,6 +11,7 @@ from flask import (
 
 from app.auth import login_required
 from app.db import get_db
+from unidecode import unidecode
 
 
 bp = Blueprint('groups', __name__, url_prefix='/groups')
@@ -35,7 +37,7 @@ def join_group(group_id):
     else:
         db.execute(
             'INSERT INTO Membership (UserID, GroupID, Role, JoinDate) VALUES (?, ?, ?, ?)',
-            (user_id, group_id, 'Member',  datetime.now(timezone.utc).date())
+            (user_id, group_id, 'member',  datetime.now(timezone.utc).date())
         )
         db.commit()
         flash('You successfully joined the group.')
@@ -90,8 +92,7 @@ def my_groups():
 
     return render_template('groups/my_groups.html', groups=groups)
 
-
-@bp.route('/<int:group_id>')
+@bp.route('/groups/<int:group_id>')
 def group_details(group_id):
     """
     Displays the details of a specific group.
@@ -147,6 +148,76 @@ def group_details(group_id):
 
     return render_template('groups/group_details.html',  group=group, members=members, events=events, user_role=user_role, is_member=is_member)
 
+def create_unidecode_function(db):  #pylint: disable=invalid-name
+   """
+   Creates a custom SQLite function for unidecoding strings.
+   Args: db (Connection): The database connection object.
+   """
+   db.create_function("unidecode", 1, unidecode)
+
+
+
+
+@bp.route('/')
+def index() -> Response:
+   """
+   Show all activity groups, with optional search and filters.
+   Supports:
+     - search (by group name or description)
+     - category_id
+     - college
+     - skill_level
+   """
+   db = get_db()
+   create_unidecode_function(db)
+  
+   search_term = request.args.get('search', '').strip()
+   sel_category_id = request.args.get('category_id')
+   sel_college = request.args.get('college')
+   sel_skill_level = request.args.get('skill_level')
+
+
+   query = """
+       SELECT g.ID, g.Name, g.Description, g.AffiliatedWithCollege, g.College,
+              g.SkillLevel, c.Name AS CategoryName
+       FROM ActivityGroup g
+       LEFT JOIN Category c ON g.CategoryID = c.ID
+       WHERE 1=1
+   """
+   args = []
+  
+   if search_term:
+       query += " AND (unidecode(g.Name) LIKE unidecode(?) OR unidecode(g.Description) LIKE unidecode(?))"
+       args.extend([f'%{search_term}%', f'%{search_term}%'])
+      
+   if sel_category_id:
+       query += " AND c.ID = ?"
+       args.append(sel_category_id)
+  
+   if sel_college:
+       query += " AND g.College = ?"
+       args.append(sel_college)
+
+
+   if sel_skill_level:
+       query += " AND g.SkillLevel = ?"
+       args.append(sel_skill_level)
+      
+   query += " ORDER BY g.Name ASC"
+  
+   groups = db.execute(query, args).fetchall()
+  
+   categories = db.execute("SELECT ID, Name FROM Category").fetchall()
+   colleges = db.execute("""
+                         SELECT DISTINCT College
+                         FROM ActivityGroup
+                         WHERE College IS NOT NULL AND College != ''
+                         ORDER BY College""").fetchall()
+   skill_levels = db.execute("SELECT DISTINCT SkillLevel FROM ActivityGroup WHERE SkillLevel IS NOT NULL").fetchall()
+  
+   return render_template('groups/index.html', groups=groups, categories=categories,
+                          colleges=colleges, skill_levels=skill_levels, search=search_term,
+                          category_id=sel_category_id, college=sel_college, skill_level=sel_skill_level)
 
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
@@ -205,16 +276,15 @@ def create_group():
 
                 db.execute("""
                     INSERT INTO Membership (UserID, GroupID, Role, JoinDate)
-                    VALUES (?, ?, 'Organizer', ?)
+                    VALUES (?, ?, 'organizer', ?)
                 """, (g.user['ID'], group_id, datetime.now().date()))
 
                 db.commit()
                 flash('Group created successfully.')
                 return redirect(url_for('groups.group_details', group_id=group_id))
 
-            except db.IntegrityError as e:
-                error = f'Failed to create group: {e}'
-
+            except db.IntegrityError:
+                error = 'Failed to create group.'
         
         flash(error)
 
