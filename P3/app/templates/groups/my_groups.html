@@ -8,13 +8,24 @@
   <p><a href="{{ url_for('groups.create_group') }}">+ Create New Group</a></p>
 
   {% if groups %}
-    <ul>
+    <ul style="list-style: none; padding: 0;">
       {% for group in groups %}
-        <li>
+        <li style="margin-bottom: 2em; border-bottom: 1px solid #ccc; padding-bottom: 1em;">
           <strong><a href="{{ url_for('groups.group_details', group_id=group.ID) }}">{{ group.Name }}</a></strong><br>
           Role: {{ group.Role }}<br>
           Joined: {{ group.JoinDate }}
+<<<<<<< HEAD
           {% if group.Role != 'Organizer' %}
+=======
+
+          {% if group.Role|lower == 'organizer' %}
+            <form action="{{ url_for('groups.delete_group', group_id=group.ID) }}" method="post" style="margin-top: 0.5em;">
+              <button type="submit" style="background-color: #d9534f;" onclick="return confirm('Delete {{ group.Name }}?')">
+                🗑️ Delete Group
+              </button>
+            </form>
+          {% else %}
+>>>>>>> 93ff37820c811f6e57d64bb1f766d2bac94370cf
             <form action="{{ url_for('groups.leave_group', group_id=group.ID) }}" method="post" style="margin-top: 0.5em;">
               <button type="submit" onclick="return confirm('Leave {{ group.Name }}?')">Leave Group</button>
             </form>
