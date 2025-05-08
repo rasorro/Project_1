@@ -177,6 +177,19 @@ def create_group():
         if affiliated and not college:
             error = 'College is required for affiliated groups.'
 
+        if affiliated and college not in [
+            row['College'] for row in db.execute("""
+                SELECT DISTINCT [College]
+                FROM [User]
+                WHERE [College] IS NOT NULL
+                UNION
+                SELECT DISTINCT [College]
+                FROM [ActivityGroup]
+                WHERE [College] IS NOT NULL
+            """).fetchall()
+        ]:
+            error = 'Invalid college selected for an affiliated group.'
+
         if error is None:
             try:
                 db.execute("""
