@@ -1,5 +1,7 @@
 # Project 3: A Real-World Database Application
 
+The purpose of this project is to help people find activity groups in the city of Boston. While there are aspects of our system designed especially for college students, there is no particular demographic other than people who are in Boston and are in search of activity groups, whether it be sports, music, cooking, etc.
+
 
 ## Team Members
 - **Robbie Rasor** – Team Lead
