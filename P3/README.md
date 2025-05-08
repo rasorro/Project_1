@@ -12,7 +12,7 @@ The purpose of this project is to help people find activity groups in the city o
 
 
 ## Testing Approach
-- **Unit Testing**: Primarily solated tests for each function and some other features. Ensured all pages properly handle GET and / or POST requests and validate input as necessary. Authorization was handled in conftest.py file, while other test files handles functionalities particular to their corresponding files.
+- **Unit Testing**: Isolated tests for most functions and some of the search features. Ensured all pages properly handle GET and / or POST requests and validate input as necessary. Authorization for tests was handled in conftest.py file, while other test files handled functionalities particular to their corresponding files in the app.
 - **Test-Driven Development**: Followed Test-Driven Development. If code pushed by devs failed tests, Test Engineer and Lead went back, examined, and refactored until all tests passed. This allowed for an opportunity to peer review each other's code.
 
 ## Notable Features
