@@ -94,7 +94,3 @@ def test_event_filter_by_skillLevel(client, auth, app):
     response = client.get(f"/?SkillLevel={group['SkillLevel']}")
     assert response.status_code == 200
     assert b'Speaker Engagement' in response.data
-
-def test_event_filter_by_skillLevel(client, auth, app):
-    auth.register()
-    auth.login()
