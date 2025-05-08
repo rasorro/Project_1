@@ -4,7 +4,7 @@ Handles the browsing and searching functionality for products in the shop.
 
 import uuid
 from flask import (
-    Blueprint, flash, render_template, request, session, Response
+    Blueprint, flash, render_template, request, session, Response, redirect, url_for
 )
 from unidecode import unidecode
 from app.db import get_db
@@ -104,3 +104,52 @@ def event_details(event_id) -> Response:
     """, (event_id,)).fetchone()
     
     return render_template('events/event_details.html', event=event)
+
+@bp.route('/create/', methods=['GET', 'POST'])
+def create_event():
+    """
+    Allows the user to create a new event for a group.
+    """
+    db = get_db()
+
+    group_id = request.args.get('group_id')
+
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        date = request.form['date']
+        start_time = request.form['start_time'] or None
+        end_time = request.form['end_time'] or None
+        location = request.form['location']
+        frequency = request.form['frequency'] or None
+
+        error = None
+
+        if not name:
+            error = 'Event name is required.'
+        elif not date:
+            error = 'Event date is required.'
+        elif not group_id:
+            error = 'You must select a group.'
+
+        if error is None:
+            try:
+                db.execute("""
+                    INSERT INTO Event (GroupID, Name, Location, Description, Date, StartTime, EndTime, Frequency)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    group_id, name, location, description, date, start_time, end_time, frequency
+                ))
+                db.commit()
+                event_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
+                flash('Event created successfully.')
+                return redirect(url_for('events.event_details', event_id=event_id))
+            except db.IntegrityError:
+                error = 'Failed to create event.'
+
+        flash(error)
+
+    groups = db.execute('SELECT ID, Name FROM ActivityGroup').fetchall()
+    categories = db.execute('SELECT ID, Name FROM Category').fetchall()  # Optional, in case you want to show categories
+
+    return render_template('events/create_event.html', groups=groups, categories=categories)

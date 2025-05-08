@@ -276,7 +276,6 @@ def create_group():
                     INSERT INTO Membership (UserID, GroupID, Role, JoinDate)
                     VALUES (?, ?, 'Organizer', ?)
                 """, (g.user['ID'], group_id, datetime.now().date()))
-                print("yes3")
                 db.commit()
                 flash('Group created successfully.')
                 return redirect(url_for('groups.group_details', group_id=group_id))
