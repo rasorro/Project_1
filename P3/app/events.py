@@ -36,10 +36,12 @@ def index() -> Response:
     search_term = request.args.get('search', '').strip()
     sel_category_id = request.args.get('category_id')
     sel_group_id = request.args.get('group_id')
-    
+    sel_college = request.args.get('college')
+    sel_skill_level = request.args.get('SkillLevel')
+
     query = """
         SELECT e.EventID, e.Name, e.Date, e.StartTime, e.Location,
-               g.Name AS GroupName, c.Name as CategoryName
+               g.Name AS GroupName, g.College, g.SkillLevel, c.Name as CategoryName
         FROM Event e
         JOIN ActivityGroup g ON e.GroupID = g.ID
         JOIN Category c ON g.CategoryID = c.ID
@@ -58,6 +60,14 @@ def index() -> Response:
     if sel_group_id:
         query += " AND g.ID = ?"
         args.append(sel_group_id)
+
+    if sel_college:
+        query += " AND g.College = ?"
+        args.append(sel_college)
+
+    if sel_skill_level:
+        query += " AND g.SkillLevel = ?"
+        args.append(sel_skill_level)
         
     query += " ORDER BY e.Date ASC"
     
@@ -65,8 +75,17 @@ def index() -> Response:
     
     categories = db.execute("SELECT ID, Name FROM Category").fetchall()
     groups = db.execute("SELECT ID, Name FROM ActivityGroup").fetchall()
+    colleges = db.execute("""
+                          SELECT DISTINCT College 
+                          FROM ActivityGroup 
+                          WHERE College IS NOT NULL AND College != ''
+                          ORDER BY College""").fetchall()
+    skill_levels = db.execute("SELECT DISTINCT SkillLevel FROM ActivityGroup").fetchall()
     
-    return render_template('events/index.html', events=events, categories=categories, groups=groups, search=search_term, category_id=sel_category_id, group_id=sel_group_id)
+    return render_template('events/index.html', events=events, categories=categories, groups=groups, 
+                           skill_levels=skill_levels,colleges=colleges, search=search_term, 
+                           category_id=sel_category_id, group_id=sel_group_id, college=sel_college,
+                           skill_level=sel_skill_level)
 
 
 @bp.route('/<int:event_id>')
