@@ -1,71 +1,73 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>Browse Events</h1>
+<h1>Events</h1>
 {% endblock %}
 
 {% block content %}
-  <form method="get" id="searchForm">
-    <label for="search">Search</label>
-    <input type="text" name="search" id="search" value="{{ search or '' }} " placeholder="Search events...">
+<form method="get" id="searchForm">
+  <label for="search">Search</label>
+  <input style="margin-bottom: 0;"type="text" name="search" id="search" value="{{ search or '' }}" placeholder="Search events...">
 
-    <label for="category_id">Category</label>
-    <select name="category_id" id="category_id">
-      <option value="">-- All Categories --</option>
-      {% for cat in categories %}
-        <option value="{{ cat.ID }}" {% if cat.ID == category_id|int %}selected{% endif %}>
-          {{ cat.Name }}
-        </option>
-      {% endfor %}
-    </select>
-
-    <label for="group_id">Group</label>
-    <select name="group_id" id="group_id">
-      <option value="">-- All Groups --</option>
-      {% for group in groups %}
-        <option value="{{ group.ID }}" {% if group.ID == group_id|int %}selected{% endif %}>
-          {{ group.Name }}
-        </option>
-      {% endfor %}
-
-    </select>
-    <label for="college">College</label>
-  <select name="college" id="college">
-    <option value="">-- All Colleges --</option>
-    {% for row in colleges %}
-      <option value="{{ row.College }}" {% if row.College == college %}selected{% endif %}>
-        {{ row.College }}
-      </option>
+  <label for="category_id" style="margin-top: 1em;">Category</label>
+  <select name="category_id" id="category_id">
+    <option value="">-- All Categories --</option>
+    {% for cat in categories %}
+    <option value="{{ cat.ID }}" {% if cat.ID==category_id|int %}selected{% endif %}>
+      {{ cat.Name }}
+    </option>
     {% endfor %}
   </select>
 
+  <label for="group_id" style="margin-top: 1em;">Group</label>
+  <select name="group_id" id="group_id">
+    <option value="">-- All Groups --</option>
+    {% for group in groups %}
+    <option value="{{ group.ID }}" {% if group.ID==group_id|int %}selected{% endif %}>
+      {{ group.Name }}
+    </option>
+    {% endfor %}
   </select>
-  <label for="skill_level">Skill Level</label>
+
+  <label for="college" style="margin-top: 1em;">College</label>
+  <select name="college" id="college">
+    <option value="">-- All Colleges --</option>
+    {% for row in colleges %}
+    <option value="{{ row.College }}" {% if row.College==college %}selected{% endif %}>
+      {{ row.College }}
+    </option>
+    {% endfor %}
+  </select>
+
+  <label for="skill_level" style="margin-top: 1em;">Skill Level</label>
   <select name="SkillLevel" id="skill_level">
-  <option value="">-- All Colleges --</option>
-  {% for row in skill_levels %}
-    <option value="{{ row.SkillLevel }}" {% if row.SkillLevel == skill_level %}selected{% endif %}>
+    <option value="">-- All Skill Levels --</option>
+    {% for row in skill_levels %}
+    <option value="{{ row.SkillLevel }}" {% if row.SkillLevel==skill_level %}selected{% endif %}>
       {{ row.SkillLevel }}
     </option>
-  {% endfor %}
+    {% endfor %}
   </select>
+  <input type="submit" value="Apply Filters" style="margin-top: 1em;">
+</form>
 
-
-    <input type="submit" value="Apply Filters">
-  </form>
-
-  {% if events %}
-    <ul>
-      {% for event in events %}
-        <li>
-          <strong><a href="{{ url_for('events.event_details', event_id=event.EventID) }}">{{ event.Name }}</a></strong><br>
-          {{ event.Date }} @ {{ event.StartTime or "TBD" }}<br>
-          Group: {{ event.GroupName }}<br>
-          Category: {{ event.CategoryName }}
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>No events match your criteria.</p>
-  {% endif %}
+{% if events %}
+{% if not search %}
+<h1>Browse Upcoming Events!</h1>
+{% else %}
+<h1>Search Results for "{{ search }}"</h1>
+{% endif %}
+<ul style="list-style-type: none; padding-left: 0;">
+  {% for event in events %}
+  <li style="margin-bottom: 1em;">
+    <strong><a href="{{ url_for('events.event_details', event_id=event.EventID) }}">{{ event.Name }}</a></strong><br>
+    {{ event.Date }} @ {{ event.StartTime or "TBD" }}<br>
+    Group: {{ event.GroupName }}<br>
+    Category: {{ event.CategoryName }}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>No events match your criteria.</p>
+{% endif %}
 {% endblock %}
