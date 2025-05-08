@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS [ActivityGroup] (
     [College] TEXT CHECK (([AffiliatedWithCollege] = 1 AND [College] IN ('Boston University', 'Northeastern University', 'Harvard University',
         'Massachusetts Institute of Technology', 'Boston College', 'Emerson College', 'Suffolk University',
         'Berklee College of Music', 'Simmons University', 'Wentworth Institute of Technology', 'University of Massachusetts Boston',
-        'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design'))
+        'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design', 'Other'))
     OR ([AffiliatedWithCollege] = 0 AND [College] IS NULL)),
     [RequiresDues] BOOLEAN,
     [SkillLevel] TEXT CHECK ([SkillLevel] IN ('Beginner', 'Intermediate', 'Advanced')),
