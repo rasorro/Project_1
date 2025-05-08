@@ -10,7 +10,7 @@ from flask import Flask
 from . import db
 from . import auth
 from . import events
-from . import membership
+from . import groups
 
 def create_app(test_config=None) -> Flask:
     """
@@ -42,7 +42,7 @@ def create_app(test_config=None) -> Flask:
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(events.bp)
-    app.register_blueprint(membership.bp)
+    app.register_blueprint(groups.bp)
 
     app.add_url_rule('/', endpoint='index')
 

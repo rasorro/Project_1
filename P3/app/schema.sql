@@ -1,11 +1,11 @@
 CREATE TABLE Authentication (
-    UserID TEXT PRIMARY KEY REFERENCES User(ID) ON DELETE CASCADE,
+    UserID INTEGER PRIMARY KEY REFERENCES User(ID) ON DELETE CASCADE,
     PasswordHash TEXT NOT NULL,
     SessionID Text
 );
 
 CREATE TABLE User (
-    ID INTEGER PRIMARY KEY,
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT NOT NULL,
     Email TEXT UNIQUE NOT NULL,
     Affiliation TEXT CHECK (Affiliation IN ('student', 'alumnus', 'resident')),
@@ -19,7 +19,7 @@ CREATE TABLE Category (
 );
 
 CREATE TABLE ActivityGroup (
-    ID INTEGER PRIMARY KEY,
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT NOT NULL,
     Description TEXT,
     Website TEXT,
