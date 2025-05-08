@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS [User] (
         ([Affiliation] != 'resident' AND [College] IN ('Boston University', 'Northeastern University', 'Harvard University',
         'Massachusetts Institute of Technology', 'Boston College', 'Emerson College', 'Suffolk University',
         'Berklee College of Music', 'Simmons University', 'Wentworth Institute of Technology', 'University of Massachusetts Boston',
-        'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design')))
+        'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design', 'Other')))
 );
 
 CREATE TABLE IF NOT EXISTS [Category] (
