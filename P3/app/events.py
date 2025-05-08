@@ -22,60 +22,66 @@ def create_unidecode_function(db):  #pylint: disable=invalid-name
 
 
 @bp.route('/')
-def browse_or_search() -> Response:
+def index() -> Response:
     """
-    Browse products by category or search for products.
-    Returns: Response: The rendered 'browse_or_search.html' template
-    with product listings and category filters.
+    Show all events, with optional search and filters.
+    Supports:
+      - search (by event name or description)
+      - category_id
+      - group_id
     """
-    db = get_db()  #pylint: disable=invalid-name
+    db = get_db()
     create_unidecode_function(db)
-    category_id = request.args.get('category')
-    search_query = request.args.get('search')
-
-    query = ('SELECT ProductID, ProductName, UnitPrice, c.CategoryID, CategoryName'
-        ' FROM Products p JOIN Categories c ON p.CategoryID = c.CategoryID')
-
-    params = []
-
-    active_category = None
-    if category_id:
-        query += ' WHERE p.CategoryID = ?'
-        params.append(category_id)
-        get_category_name_query = 'SELECT CategoryID, CategoryName FROM Categories WHERE CategoryID = ?' #pylint: disable=line-too-long
-        active_category = db.execute(get_category_name_query, (category_id,)).fetchone()
-    elif search_query:
-        query += ' WHERE unidecode(p.ProductName) LIKE unidecode(?)'
-        params.append(f'%{search_query.strip()}%')
-
-    query += ' ORDER BY ProductName'
-
-    products = db.execute(query, params).fetchall()
-
-    categories = db.execute('SELECT CategoryID, CategoryName FROM Categories').fetchall()
-
-    return render_template('shop/browse_or_search.html', products=products, categories=categories, active_category=active_category, search_query=search_query)  #pylint: disable=line-too-long
-
-
-@bp.route('/product/<int:product_id>', methods=('GET', 'POST'))
-def product_details(product_id) -> Response:
+    
+    search_term = request.args.get('search', '').strip()
+    sel_category_id = request.args.get('category_id')
+    sel_group_id = request.args.get('group_id')
+    
+    query = """
+        SELECT e.EventID, e.Name, e.Date, e.StartTime, e.Location,
+               g.Name AS GroupName, c.Name as CategoryName
+        FROM Event e
+        JOIN ActivityGroup g ON e.GroupID = g.ID
+        JOIN Category c ON g.CategoryID = c.ID
+        WHERE 1=1
     """
-    View details of a specific product and add it to the shopping cart.
-    Returns: Response: The rendered 'product_details.html' template with product details.
+    args = []
+    
+    if search_term:
+        query += " AND (unidecode(e.Name) LIKE unidecode(?) OR unidecode(e.Description) LIKE unidecode(?))"
+        args.extend([f'%{search_term}%', f'%{search_term}%'])
+        
+    if sel_category_id:
+        query += " AND c.ID = ?"
+        args.append(sel_category_id)
+    
+    if sel_group_id:
+        query += " AND g.ID = ?"
+        args.append(sel_group_id)
+        
+    query += " ORDER BY e.Date ASC"
+    
+    events = db.execute(query, args).fetchall()
+    
+    categories = db.execute("SELECT ID, Name FROM Category").fetchall()
+    groups = db.execute("SELECT ID, Name FROM ActivityGroup").fetchall()
+    
+    return render_template('events/index.html', events=events, categories=categories, groups=groups, search=search_term, category_id=sel_category_id, group_id=sel_group_id)
+
+
+@bp.route('/<int:event_id>')
+def event_details(event_id) -> Response:
     """
-    db = get_db()  #pylint: disable=invalid-name
-    if request.method == 'POST':
-        if 'userID' not in session:
-            session['userID'] = str(uuid.uuid4())
-        quantity = int(request.form['quantity'])
-        db.execute(
-            'INSERT INTO [Shopping_Cart] (shopperID, productID, quantity) VALUES (?, ?, ?)',
-            (session.get('userID'), product_id, quantity)
-        )
-        db.commit()
-        flash('Product added to cart successfully!')
-    product_info = db.execute(
-        '''SELECT ProductID, ProductName, UnitPrice, QuantityPerUnit
-           FROM Products
-           WHERE ProductID = ?''', (product_id,)).fetchone()
-    return render_template('shop/product_details.html', product_info=product_info)
+    View details of a specific event.
+    Returns: Response: The rendered 'event_details.html' template with event details.
+    """
+    db = get_db()
+    event = db.execute("""
+        SELECT e.*, g.Name AS GroupName, u.Name as HostName, g.Email as HostEmail
+        FROM Event e
+        JOIN ActivityGroup g ON e.GroupID = g.ID
+        LEFT JOIN User u ON g.ContactUserID = u.ID
+        WHERE e.EventID = ?
+    """, (event_id,)).fetchone()
+    
+    return render_template('events/event_details.html', event=event)

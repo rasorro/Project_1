@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>Browse Events</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="get" id="searchForm">
+    <label for="search">Search</label>
+    <input type="text" name="search" id="search" value="{{ search or '' }} " placeholder="Search events...">
+
+    <label for="category_id">Category</label>
+    <select name="category_id" id="category_id">
+      <option value="">-- All Categories --</option>
+      {% for cat in categories %}
+        <option value="{{ cat.ID }}" {% if cat.ID == category_id|int %}selected{% endif %}>
+          {{ cat.Name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <label for="group_id">Group</label>
+    <select name="group_id" id="group_id">
+      <option value="">-- All Groups --</option>
+      {% for group in groups %}
+        <option value="{{ group.ID }}" {% if group.ID == group_id|int %}selected{% endif %}>
+          {{ group.Name }}
+        </option>
+      {% endfor %}
+    </select>
+
+    <input type="submit" value="Apply Filters">
+  </form>
+
+  {% if events %}
+    <ul>
+      {% for event in events %}
+        <li>
+          <strong><a href="{{ url_for('events.event_details', event_id=event.EventID) }}">{{ event.Name }}</a></strong><br>
+          {{ event.Date }} @ {{ event.StartTime or "TBD" }}<br>
+          Group: {{ event.GroupName }}<br>
+          Category: {{ event.CategoryName }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No events match your criteria.</p>
+  {% endif %}
+{% endblock %}

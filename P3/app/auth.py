@@ -24,46 +24,50 @@ def register() -> str:
     """
 
     if request.method == 'POST':
-        user_id = request.form['username'].upper()        
+        name = request.form['name']
+        email = request.form['email']
+        affiliation = request.form['affiliation']
+        college = request.form['college']        
         password = request.form['password']
         
         db = get_db() # pylint: disable=invalid-name
         error = None
         
-        if not user_id:
-            error = 'Username is required.'
-        elif len(user_id) !=5:
-            error = 'user_ID must be 5 characters'
+        if not name:
+            error = 'Name is required.'
+        elif not email:
+            error = 'Email is required.'
         elif not password:
             error = 'Password is required.'
-        if error is None:
-            user_exists = db.execute(
-                "SELECT userID FROM Authentication WHERE userID = ?", (user_id,)
-            ).fetchone()
-            if user_exists:
-                error = f"User {user_id} is already registered."
-        if error is None:
-            customer_exists = db.execute(
-                "SELECT CustomerID FROM Customers WHERE CustomerID = ?", (user_id,)
-            ).fetchone()
-            if customer_exists:
-                error = f'CustomerID {user_id} already exists but does not have a password.'
+            
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO Customers (CustomerID) VALUES (?)", (user_id,)
+                    "INSERT INTO User (Name, Email, Affiliation, College) VALUES (?, ?, ?, ?)",
+                    (name, email, affiliation, college)
                 )
+                user = db.execute(
+                    "SELECT ID FROM User WHERE Email = ?",
+                    (email,)
+                ).fetchone()
+
                 db.execute(
-                    "INSERT INTO Authentication (userID, passwordHash) VALUES (?, ?)",
-                    (user_id, generate_password_hash(password)),
+                    "INSERT INTO Authentication (UserID, PasswordHash) VALUES (?, ?)",
+                    (user['ID'], generate_password_hash(password))
                 )
+
                 db.commit()
             except db.IntegrityError:
-                error = f"User {user_id} registration failed."
+                error = "A user with that email already exists."
             else:
-                return redirect(url_for("auth.login"))
+                session.clear()
+                session['userID'] = user['ID']
+                return redirect(url_for('index'))
+            
         flash(error)
+        
     return render_template('auth/register.html')
+
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login() -> str:
@@ -74,26 +78,35 @@ def login() -> str:
     - The login page with an error message if login fails.
     """
     if request.method == 'POST':
-        user_id = request.form['username'].upper()
+        email = request.form['email']
         password = request.form['password']
         db = get_db()  # pylint: disable=invalid-name
         error = None
+        
         user = db.execute(
-            'SELECT * FROM Authentication WHERE userID = ?', (user_id,)
+            """
+            SELECT u.ID, u.Name, a.PasswordHash
+            FROM User u
+            JOIN Authentication a ON u.ID = a.UserID
+            WHERE u.Email = ?
+            """, (email,)
         ).fetchone()
+        
         if user is None:
-            error = 'Incorrect username.'
+            error = 'Incorrect email.'
         elif not check_password_hash(user['passwordHash'], password):
             error = 'Incorrect password.'
+            
         if error is None:
-            db.execute('UPDATE Shopping_Cart SET shopperID = ? WHERE shopperID = ?',
-            (user_id, session.get('userID')))
-            db.commit()
             session.clear()
-            session['userID'] = user['userID']
-            return redirect(url_for('index'))
+            session['userID'] = user['ID']
+            next_page = request.args.get('next')
+            return redirect(next_page or url_for('index'))
+        
         flash(error)
+        
     return render_template('auth/login.html')
+
 
 @bp.before_app_request
 def load_logged_in_user():
@@ -107,8 +120,9 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = get_db().execute(
-            'SELECT * FROM Authentication WHERE userID = ?', (user_id,)
+            'SELECT * FROM User WHERE ID = ?', (user_id,)
         ).fetchone()
+
 
 @bp.route('/logout')
 def logout() -> str:
@@ -119,6 +133,7 @@ def logout() -> str:
     session.clear()
     return redirect(url_for('index'))
 
+
 def login_required(view) -> callable:
     """
     A decorator to enforce that a user must be logged in to access a specific view.
@@ -128,6 +143,6 @@ def login_required(view) -> callable:
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.login', next=request.url))
         return view(**kwargs)
     return wrapped_view
