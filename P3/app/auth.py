@@ -27,7 +27,7 @@ def register() -> str:
         name = request.form['name']
         email = request.form['email']
         affiliation = request.form['affiliation']
-        college = request.form['college']        
+        college = request.form['college'] or None 
         password = request.form['password']
         
         db = get_db() # pylint: disable=invalid-name

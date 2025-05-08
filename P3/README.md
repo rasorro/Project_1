@@ -51,6 +51,11 @@ pip install -r requirements.txt
 pip freeze > requirements.txt
 ```
 
+### Initializing the database
+```sh
+flask --app app init-db
+```
+
 ### Running the Application
 ```sh
 flask --app app run

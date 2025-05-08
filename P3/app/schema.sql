@@ -4,13 +4,13 @@ CREATE TABLE IF NOT EXISTS [Authentication] (
     [SessionID] Text
 );
 
-CREATE TABLE IF NOT EXISTS [User] (
-    [ID] INTEGER PRIMARY KEY AUTOINCREMENT,
-    [Name] TEXT NOT NULL,
-    [Email] TEXT UNIQUE NOT NULL,
-    [Affiliation] TEXT CHECK ([Affiliation] IN ('student', 'alumnus', 'resident')),
-    [College] TEXT CHECK (([Affiliation] = 'resident' AND [College] IS NULL) OR
-        ([Affiliation] != 'resident' AND [College] IN ('Boston University', 'Northeastern University', 'Harvard University',
+CREATE TABLE IF NOT EXISTS User (
+    ID INTEGER PRIMARY KEY,
+    Name TEXT NOT NULL,
+    Email TEXT UNIQUE NOT NULL,
+    Affiliation TEXT CHECK (Affiliation IN ('student', 'alumnus', 'resident')),
+    College TEXT DEFAULT NULL CHECK ((Affiliation = 'resident' AND College IS NULL) OR
+        (Affiliation != 'resident' AND College IN ('Boston University', 'Northeastern University', 'Harvard University',
         'Massachusetts Institute of Technology', 'Boston College', 'Emerson College', 'Suffolk University',
         'Berklee College of Music', 'Simmons University', 'Wentworth Institute of Technology', 'University of Massachusetts Boston',
         'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design')))
