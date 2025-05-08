@@ -33,11 +33,11 @@
   {% elif is_member %}
     <p><strong>You are a member of this group.</strong></p>
     <form action="{{ url_for('groups.leave_group', group_id=group.ID) }}" method="post">
-      <button type="submit" onclick="return confirm('Leave this group?')">Leave Group</button>
+      <button type="submit" style="width: 100px;" onclick="return confirm('Leave this group?')">Leave Group</button>
     </form>
   {% else %}
     <form action="{{ url_for('groups.join_group', group_id=group.ID) }}" method="post">
-      <button type="submit">Join Group</button>
+      <button type="submit" style="width: 100px;">Join Group</button>
     </form>
   {% endif %}
 

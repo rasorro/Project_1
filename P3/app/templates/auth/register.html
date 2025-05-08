@@ -21,7 +21,7 @@
     </select>
 
     <label for="college">College</label>
-    <select name="college" id="college" required>
+    <select name="college" id="college">
       <option value="">-- Select one --</option>
       <option value="Boston College">Boston College</option>
       <option value="Northeastern University">Northeastern University</option>
@@ -45,4 +45,22 @@
 
     <input type="submit" value="Register">
   </form>
+
+  <script>
+    const affiliation = document.getElementById('affiliation');
+    const collegeLabel = document.querySelector('label[for="college"]');
+    const collegeSelect = document.getElementById('college');
+  
+    function toggleCollege() {
+      const selected = affiliation.value;
+      const show_colleges = selected === 'Student' || selected === 'Alumnus';
+      collegeLabel.style.display = show_colleges ? 'block' : 'none';
+      collegeSelect.style.display = show_colleges ? 'block' : 'none';
+      if (!show_colleges) collegeSelect.value = '';
+    }
+  
+    affiliation.addEventListener('change', toggleCollege);
+    window.onload = toggleCollege;
+  </script>
+
 {% endblock %}
