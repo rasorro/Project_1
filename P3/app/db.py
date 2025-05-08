@@ -8,14 +8,13 @@ from flask import current_app, g
 
 EMPLOYEE_ID = None
 
-def get_db(database='P1_DATABASE'):
+def get_db():
     """
     Get a database connection. Defaults to the main database ('DATABASE').
-    Use 'P3_DATABASE' for the secondary database.
     """
     if 'db' not in g:
         g.db = sqlite3.connect(
-            current_app.config[database],
+            current_app.config['DATABASE'],
             detect_types=sqlite3.PARSE_DECLTYPES
         )
         g.db.row_factory = sqlite3.Row
@@ -33,71 +32,12 @@ def init_db():
     """
     Initializes the database by creating the necessary tables if they do not exist.
     """
-    db = get_db("P3_DATABASE") # pylint: disable=invalid-name
-    db.executescript("""CREATE TABLE IF NOT EXISTS [User] (
-        [ID] INTEGER PRIMARY KEY,
-        [Name] TEXT NOT NULL,
-        [Email] TEXT UNIQUE NOT NULL,
-        [Affiliation] TEXT CHECK ([Affiliation] IN ('student', 'alumnus', 'resident')),
-        [College] TEXT CHECK (([Affiliation] = 'resident' AND [College] IS NULL) OR
-            ([Affiliation] != 'resident' AND [College] IN ('Boston University', 'Northeastern University', 'Harvard University',
-            'Massachusetts Institute of Technology', 'Boston College', 'Emerson College', 'Suffolk University',
-            'Berklee College of Music', 'Simmons University', 'Wentworth Institute of Technology', 'University of Massachusetts Boston',
-            'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design')))
-    );
-
-    CREATE TABLE IF NOT EXISTS [Category] (
-        [ID] INTEGER PRIMARY KEY,
-        [Name] TEXT UNIQUE NOT NULL,
-        [Description] TEXT
-    );
-
-    CREATE TABLE IF NOT EXISTS [ActivityGroup] (
-        [ID] INTEGER PRIMARY KEY,
-        [Name] TEXT NOT NULL,
-        [Description] TEXT,
-        [Website] TEXT,
-        [ContactUserID] INTEGER REFERENCES [User]([ID]) ON DELETE SET NULL,
-        [Email] TEXT REFERENCES [User]([Email]) ON DELETE SET NULL,
-        [Address] TEXT,
-        [CategoryID] INTEGER,
-        [AffiliatedWithCollege] BOOLEAN,
-        [College] TEXT CHECK (([AffiliatedWithCollege] = 1 AND [College] IN ('Boston University', 'Northeastern University', 'Harvard University',
-            'Massachusetts Institute of Technology', 'Boston College', 'Emerson College', 'Suffolk University',
-            'Berklee College of Music', 'Simmons University', 'Wentworth Institute of Technology', 'University of Massachusetts Boston',
-            'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design'))
-        OR ([AffiliatedWithCollege] = 0 AND [College] IS NULL)),
-        [RequiresDues] BOOLEAN,
-        [SkillLevel] TEXT CHECK ([SkillLevel] IN ('beginner', 'intermediate', 'advanced')),
-        FOREIGN KEY ([CategoryID]) REFERENCES [Category]([ID]) ON DELETE SET NULL
-    );
-
-    CREATE TABLE IF NOT EXISTS [Event] (
-        [EventID] INTEGER PRIMARY KEY,
-        [GroupID] INTEGER NOT NULL REFERENCES [ActivityGroup]([ID]) ON DELETE CASCADE,
-        [Name] TEXT NOT NULL,
-        [Location] TEXT,
-        [Description] TEXT,
-        [Date] DATE NOT NULL,
-        [StartTime] TIME,
-        [EndTime] TIME,
-        [Frequency] TEXT
-    );
-
-    CREATE TABLE IF NOT EXISTS [Membership] (
-        [Role] TEXT CHECK ([Role] IN ('member', 'organizer')),
-        [JoinDate] DATE,
-        [UserID] INTEGER REFERENCES [User]([ID]) ON DELETE CASCADE,
-        [GroupID] INTEGER REFERENCES [ActivityGroup]([ID]) ON DELETE CASCADE,
-        PRIMARY KEY ([UserID], [GroupID])
-    );
-
-    CREATE TABLE IF NOT EXISTS [UserInterest] (
-        [UserID] INTEGER REFERENCES [User]([ID]) ON DELETE CASCADE,
-        [CategoryID] INTEGER REFERENCES [Category]([ID]) ON DELETE CASCADE,
-        PRIMARY KEY ([UserID], [CategoryID])
-    );
-    """)
+    
+    db = get_db()
+    
+    with current_app.open_resource('schema.sql') as f:
+        db.executescript(f.read().decode('utf8'))
+    
     if db.execute("SELECT COUNT(*) FROM User").fetchone()[0] == 0:
         db.executescript("""
         INSERT INTO User (ID, Name, Email, Affiliation, College) VALUES
