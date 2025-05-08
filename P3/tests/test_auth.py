@@ -29,8 +29,8 @@ def test_register(auth, app):
         ('', 'test@example.com', 'Student', 'Boston University', 'test', b'Name is required'),
         ('Test', '', 'Student', 'Boston University', 'test', b'Email is required'),
         ('Test', 'test@example.com', 'Student', 'Boston University', '', b'Password is required'),
-        ('Test', 'test@example.com', 'Student', '', 'test', 'College is required for students.'),
-        ('Test', 'test@example.com', 'Resident', 'Boston University', 'test', 'College should be blank for residents.'),
+        ('Test', 'test@example.com', 'Student', '', 'test', b'College is required for students.'),
+        ('Test', 'test@example.com', 'Resident', 'Boston University', 'test', b'College should be blank for residents.'),
         ('Test', 'alice.johnson@example.com', 'Student', 'Boston University', 'test', b'A user with that email already exists.'),
     ]
 )

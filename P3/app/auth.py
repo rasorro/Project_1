@@ -28,8 +28,7 @@ def register() -> str:
         email = request.form['email'].strip().lower()
         affiliation = request.form['affiliation']
         college = None
-        if affiliation != 'Resident':
-            college = request.form['college'] or None 
+        college = request.form['college'] or None
         password = request.form['password']
         
         print(f"affiliation={affiliation!r} college={college!r}")
@@ -48,7 +47,10 @@ def register() -> str:
         elif affiliation == 'Resident' and college:
             error = 'College should be blank for residents.'
         elif db.execute("SELECT 1 FROM User WHERE Email = ?", (email,)).fetchone():
-            error = 'A user with that email already exists.' 
+            error = 'A user with that email already exists.'
+        if error is not None:
+            flash(error)
+            return render_template('auth/register.html')
         if error is None:
             try:
                 db.execute(

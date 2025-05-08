@@ -12,11 +12,16 @@ def app():
     app = create_app({
         'TESTING': True,
         'DATABASE': db_path,
-         'SECRET_KEY': 'dev',
+        'SECRET_KEY': 'dev',
     })
 
     with app.app_context():
         init_db()
+        db = get_db()
+        db.execute("DELETE FROM Category")
+        db.execute("INSERT INTO Category (ID, Name) VALUES (?, ?)", (1, 'Sports'))
+        db.commit()
+
 
     yield app
 
