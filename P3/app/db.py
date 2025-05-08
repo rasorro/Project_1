@@ -98,7 +98,8 @@ def init_db():
         PRIMARY KEY ([UserID], [CategoryID])
     );
     """)
-    db.executescript("""
+    if db.execute("SELECT COUNT(*) FROM User").fetchone()[0] == 0:
+        db.executescript("""
         INSERT INTO User (ID, Name, Email, Affiliation, College) VALUES
 (1, 'Alice Johnson', 'alice.johnson@example.com', 'student', 'Boston University'),
 (2, 'Bob Smith', 'bob.smith@example.com', 'alumnus', 'Northeastern University'),
