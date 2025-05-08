@@ -205,7 +205,7 @@ def create_group():
 
                 db.execute("""
                     INSERT INTO Membership (UserID, GroupID, Role, JoinDate)
-                    VALUES (?, ?, 'organizer', ?)
+                    VALUES (?, ?, 'Organizer', ?)
                 """, (g.user['ID'], group_id, datetime.now().date()))
 
                 db.commit()
