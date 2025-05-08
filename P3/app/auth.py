@@ -43,7 +43,12 @@ def register() -> str:
             error = 'Email is required.'
         elif not password:
             error = 'Password is required.'
-            
+        elif affiliation == 'Student' and not college:
+            error = 'College is required for students.'
+        elif affiliation == 'Resident' and college:
+            error = 'College should be blank for residents.'
+        elif db.execute("SELECT 1 FROM User WHERE Email = ?", (email,)).fetchone():
+            error = 'A user with that email already exists.' 
         if error is None:
             try:
                 db.execute(
