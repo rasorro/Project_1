@@ -1,26 +1,157 @@
-html { font-family: sans-serif; background: #eee; padding: 1rem; }
-body { max-width: 960px; margin: 0 auto; background: white; }
-h1 { font-family: serif; color: #377ba8; margin: 1rem 0; }
-a { color: #377ba8; }
-hr { border: none; border-top: 1px solid lightgray; }
-nav { background: lightgray; display: flex; align-items: center; padding: 0 0.5rem; }
-nav h1 { flex: auto; margin: 0; }
-nav h1 a { text-decoration: none; padding: 0.25rem 0.5rem; }
-nav ul  { display: flex; list-style: none; margin: 0; padding: 0; }
-nav ul li a, nav ul li span, header .action { display: block; padding: 0.5rem; }
-.content { padding: 0 1rem 1rem; }
-.content > header { border-bottom: 1px solid lightgray; display: flex; align-items: flex-end; }
-.content > header h1 { flex: auto; margin: 1rem 0 0.25rem 0; }
-.flash { margin: 1em 0; padding: 1em; background: #cae6f6; border: 1px solid #377ba8; }
-.post > header { display: flex; align-items: flex-end; font-size: 0.85em; }
-.post > header > div:first-of-type { flex: auto; }
-.post > header h1 { font-size: 1.5em; margin-bottom: 0; }
-.post .about { color: slategray; font-style: italic; }
-.post .body { white-space: pre-line; }
-.content:last-child { margin-bottom: 0; }
-.content form { margin: 1em 0; display: flex; flex-direction: column; }
-.content label { font-weight: bold; margin-bottom: 0.5em; }
-.content input, .content textarea { margin-bottom: 1em; }
-.content textarea { min-height: 12em; resize: vertical; }
-input.danger { color: #cc2f2e; }
-input[type=submit] { align-self: start; min-width: 10em; }
+/* General Styles */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 2rem;
+    color: #333;
+  }
+  
+  a {
+    color: #377ba8;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Header */
+  .events-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .events-header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 0.2rem;
+  }
+  
+  .events-header p {
+    font-size: 1.1rem;
+    color: #666;
+  }
+  
+  /* Filter Form */
+  .filter-form-advanced {
+    background: #f8f8f8;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.25rem 2rem;
+  }
+  
+  .filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  
+  .filter-field label {
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .filter-field input,
+  .filter-field select {
+    padding: 0.6rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    transition: border-color 0.2s ease;
+  }
+  
+  .filter-field input:focus,
+  .filter-field select:focus {
+    border-color: #377ba8;
+    outline: none;
+  }
+  
+  .filter-actions {
+    grid-column: span 2;
+    text-align: right;
+    margin-top: 1rem;
+  }
+  
+  .filter-actions button {
+    padding: 0.6rem 1.5rem;
+    background-color: #377ba8;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+  }
+  
+  .filter-actions button:hover {
+    background-color: #2d6690;
+  }
+  
+  /* Event Cards */
+  .event-cards {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  
+  .event-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .event-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+  
+  .event-header h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: #377ba8;
+  }
+  
+  .event-header a {
+    text-decoration: none;
+  }
+  
+  .event-time {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.2rem;
+  }
+  
+  .event-details {
+    margin-top: 0.8rem;
+  }
+  
+  .event-details p {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+  }
+  
+  /* No Events Message */
+  .no-events {
+    padding: 2rem;
+    background-color: #fff3cd;
+    border-left: 6px solid #ffeeba;
+    color: #856404;
+    border-radius: 6px;
+    margin-top: 1rem;
+    font-size: 1.1rem;
+  }
+  

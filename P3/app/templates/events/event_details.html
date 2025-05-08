@@ -24,7 +24,12 @@
 
   <p><strong>Hosted by group:</strong>
     <a href="{{ url_for('groups.group_details', group_id=event.GroupID) }}">{{ event.GroupName }}</a>
+    {% if not is_member %}
+    <form action="{{ url_for('groups.join_group', group_id=event.GroupID) }}" method="post">
+      <button type="submit" style="width: 100px;">Join Group</button>
+    </form>
   </p>
+{% endif %}
 
   <p><strong>Host:</strong> {{ event.HostName or "Unknown" }}</p>
 

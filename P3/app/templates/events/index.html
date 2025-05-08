@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
+<<<<<<< HEAD
 <h1>Events</h1>
 {% endblock %}
 
@@ -71,3 +72,92 @@
 <p>No events match your criteria.</p>
 {% endif %}
 {% endblock %}
+=======
+  <div class="events-header">
+    <h1>🎉 Browse Events</h1>
+    <p>Find your next activity, workshop, or hangout</p>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <form method="get" id="searchForm" class="filter-form-advanced">
+    <div class="filter-grid">
+      <div class="filter-field">
+        <label for="search">🔎 Search</label>
+        <input type="text" name="search" id="search" value="{{ search or '' }}" placeholder="Event name or description">
+      </div>
+
+      <div class="filter-field">
+        <label for="category_id">📂 Category</label>
+        <select name="category_id" id="category_id">
+          <option value="">All Categories</option>
+          {% for cat in categories %}
+            <option value="{{ cat.ID }}" {% if cat.ID == category_id|int %}selected{% endif %}>
+              {{ cat.Name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label for="group_id">👥 Group</label>
+        <select name="group_id" id="group_id">
+          <option value="">All Groups</option>
+          {% for group in groups %}
+            <option value="{{ group.ID }}" {% if group.ID == group_id|int %}selected{% endif %}>
+              {{ group.Name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label for="college">🏫 College</label>
+        <select name="college" id="college">
+          <option value="">All Colleges</option>
+          {% for row in colleges %}
+            <option value="{{ row.College }}" {% if row.College == college %}selected{% endif %}>
+              {{ row.College }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label for="skill_level">🎯 Skill Level</label>
+        <select name="SkillLevel" id="skill_level">
+          <option value="">All Levels</option>
+          {% for row in skill_levels %}
+            <option value="{{ row.SkillLevel }}" {% if row.SkillLevel == skill_level %}selected{% endif %}>
+              {{ row.SkillLevel }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-actions">
+        <button type="submit">Apply Filters</button>
+      </div>
+    </div>
+  </form>
+
+  {% if events %}
+    <div class="event-cards">
+      {% for event in events %}
+        <div class="event-card">
+          <div class="event-header">
+            <h2><a href="{{ url_for('events.event_details', event_id=event.EventID) }}">{{ event.Name }}</a></h2>
+            <p class="event-time">{{ event.Date }} @ {{ event.StartTime or "TBD" }}</p>
+          </div>
+          <div class="event-details">
+            <p><strong>Group:</strong> {{ event.GroupName }}</p>
+            <p><strong>Category:</strong> {{ event.CategoryName }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="no-events">😢 No events match your filters.</div>
+  {% endif %}
+{% endblock %}
+>>>>>>> 94c31b5d07ea0d33c4ecd57b5322a527cd9940a2

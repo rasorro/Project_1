@@ -1,11 +1,12 @@
 # Python virtual environment
 P1/.venv/
 P3/.venv/
+P3/.venvv/
 
 # Python bytecode
 P1/flaskr/__pycache__/
 P1/tests/__pycache__/
-P3/flaskr/__pycache__/
+P3/app/__pycache__/
 P3/tests/__pycache__/
 *.py[cod]
 
