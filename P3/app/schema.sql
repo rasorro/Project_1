@@ -1,9 +1,3 @@
-CREATE TABLE IF NOT EXISTS [Authentication] (
-    [UserID] INTEGER PRIMARY KEY REFERENCES User(ID) ON DELETE CASCADE,
-    [PasswordHash] TEXT NOT NULL,
-    [SessionID] Text
-);
-
 CREATE TABLE IF NOT EXISTS [User] (
     [ID] INTEGER PRIMARY KEY AUTOINCREMENT,
     [Name] TEXT NOT NULL,
@@ -14,6 +8,12 @@ CREATE TABLE IF NOT EXISTS [User] (
         'Massachusetts Institute of Technology', 'Boston College', 'Emerson College', 'Suffolk University',
         'Berklee College of Music', 'Simmons University', 'Wentworth Institute of Technology', 'University of Massachusetts Boston',
         'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design', 'Other')))
+);
+
+CREATE TABLE IF NOT EXISTS [Authentication] (
+    [UserID] INTEGER PRIMARY KEY REFERENCES User(ID) ON DELETE CASCADE,
+    [PasswordHash] TEXT NOT NULL,
+    [SessionID] Text
 );
 
 CREATE TABLE IF NOT EXISTS [Category] (
