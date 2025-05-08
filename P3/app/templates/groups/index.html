@@ -1,62 +1,82 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>Browse Activity Groups</h1>
+  <div class="groups-header">
+    <h1>👥 Browse Activity Groups</h1>
+    <p>Discover communities and join like-minded individuals</p>
+  </div>
 {% endblock %}
 
 {% block content %}
-  <form method="get" id="searchForm">
-    <label for="search">Search</label>
-    <input type="text" name="search" id="search" value="{{ search or '' }}" placeholder="Search groups...">
+  <form method="get" id="searchForm" class="filter-form-advanced">
+    <div class="filter-grid">
+      <div class="filter-field">
+        <label for="search">🔎 Search</label>
+        <input type="text" name="search" id="search" value="{{ search or '' }}" placeholder="Group name or description">
+      </div>
 
-    <label for="category_id">Category</label>
-    <select name="category_id" id="category_id">
-      <option value="">-- All Categories --</option>
-      {% for cat in categories %}
-        <option value="{{ cat.ID }}" {% if cat.ID == category_id|int %}selected{% endif %}>
-          {{ cat.Name }}
-        </option>
-      {% endfor %}
-    </select>
+      <div class="filter-field">
+        <label for="category_id">📂 Category</label>
+        <select name="category_id" id="category_id">
+          <option value="">All Categories</option>
+          {% for cat in categories %}
+            <option value="{{ cat.ID }}" {% if cat.ID == category_id|int %}selected{% endif %}>
+              {{ cat.Name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <label for="college">College</label>
-    <select name="college" id="college">
-      <option value="">-- All Colleges --</option>
-      {% for row in colleges %}
-        <option value="{{ row.College }}" {% if row.College == college %}selected{% endif %}>
-          {{ row.College }}
-        </option>
-      {% endfor %}
-    </select>
+      <div class="filter-field">
+        <label for="college">🏫 College</label>
+        <select name="college" id="college">
+          <option value="">All Colleges</option>
+          {% for row in colleges %}
+            <option value="{{ row.College }}" {% if row.College == college %}selected{% endif %}>
+              {{ row.College }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <label for="skill_level">Skill Level</label>
-    <select name="skill_level" id="skill_level">
-      <option value="">-- All Skill Levels --</option>
-      {% for level in skill_levels %}
-        <option value="{{ level.SkillLevel }}" {% if level.SkillLevel == skill_level %}selected{% endif %}>
-          {{ level.SkillLevel }}
-        </option>
-      {% endfor %}
-    </select>
+      <div class="filter-field">
+        <label for="skill_level">🎯 Skill Level</label>
+        <select name="skill_level" id="skill_level">
+          <option value="">All Levels</option>
+          {% for level in skill_levels %}
+            <option value="{{ level.SkillLevel }}" {% if level.SkillLevel == skill_level %}selected{% endif %}>
+              {{ level.SkillLevel }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
 
-    <input type="submit" value="Apply Filters">
+      <div class="filter-actions">
+        <button type="submit">Apply Filters</button>
+      </div>
+    </div>
   </form>
 
   {% if groups %}
-    <ul>
+    <div class="group-cards">
       {% for group in groups %}
-        <li>
-          <strong><a href="{{ url_for('groups.group_details', group_id=group.ID) }}">{{ group.Name }}</a></strong><br>
-          {{ group.Description or "No description provided." }}<br>
-          {% if group.AffiliatedWithCollege %}
-            Affiliated College: {{ group.College }}
-          {% else %}
-            Not affiliated with a college
-          {% endif %}
-        </li>
+        <div class="group-card">
+          <div class="group-header">
+            <h2><a href="{{ url_for('groups.group_details', group_id=group.ID) }}">{{ group.Name }}</a></h2>
+          </div>
+          <div class="group-details">
+            <p>{{ group.Description or "No description provided." }}</p>
+            <p><strong>Category:</strong> {{ group.CategoryName }}</p>
+            {% if group.AffiliatedWithCollege %}
+              <p><strong>Affiliated College:</strong> {{ group.College }}</p>
+            {% else %}
+              <p><strong>Not affiliated with a college</strong></p>
+            {% endif %}
+          </div>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
-    <p>No groups match your criteria.</p>
+    <div class="no-groups">😢 No groups match your filters.</div>
   {% endif %}
 {% endblock %}
