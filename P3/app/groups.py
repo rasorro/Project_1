@@ -206,15 +206,16 @@ def create_group():
 
                 db.execute("""
                     INSERT INTO Membership (UserID, GroupID, Role, JoinDate)
-                    VALUES (?, ?, 'organizer', ?)
+                    VALUES (?, ?, 'Organizer', ?)
                 """, (g.user['ID'], group_id, datetime.now().date()))
 
                 db.commit()
                 flash('Group created successfully.')
                 return redirect(url_for('groups.group_details', group_id=group_id))
 
-            except db.IntegrityError:
-                error = 'Failed to create group.'
+            except db.IntegrityError as e:
+                error = f'Failed to create group: {e}'
+
         
         flash(error)
 
