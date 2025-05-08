@@ -33,7 +33,7 @@ def init_db():
     """
     Initializes the database by creating the necessary tables if they do not exist.
     """
-    db = get_db() # pylint: disable=invalid-name
+    db = get_db("P3_DATABASE") # pylint: disable=invalid-name
     db.executescript("""CREATE TABLE IF NOT EXISTS [User] (
         [ID] INTEGER PRIMARY KEY,
         [Name] TEXT NOT NULL,
@@ -104,7 +104,7 @@ def init_db():
 (2, 'Bob Smith', 'bob.smith@example.com', 'alumnus', 'Northeastern University'),
 (3, 'Carol White', 'carol.white@example.com', 'resident', NULL),
 (4, 'David Lee', 'david.lee@example.com', 'student', 'Harvard University'),
-(5, 'Emily Chen', 'emily.chen@example.com', 'alumnus', 'MIT'),
+(5, 'Emily Chen', 'emily.chen@example.com', 'alumnus', 'Massachusetts Institute of Technology'),
 (6, 'Frank Nguyen', 'frank.nguyen@example.com', 'resident', NULL),
 (7, 'Grace Kim', 'grace.kim@example.com', 'student', 'Suffolk University'),
 (8, 'Henry Zhao', 'henry.zhao@example.com', 'student', 'Tufts University'),
@@ -186,7 +186,6 @@ INSERT INTO UserInterest (UserID, CategoryID) VALUES
 (15, 4);
     """)
     db.commit()
-
     
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
