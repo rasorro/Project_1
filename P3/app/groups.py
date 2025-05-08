@@ -37,7 +37,7 @@ def join_group(group_id):
     else:
         db.execute(
             'INSERT INTO Membership (UserID, GroupID, Role, JoinDate) VALUES (?, ?, ?, ?)',
-            (user_id, group_id, 'member',  datetime.now(timezone.utc).date())
+            (user_id, group_id, 'Member',  datetime.now(timezone.utc).date())
         )
         db.commit()
         flash('You successfully joined the group.')
@@ -271,14 +271,12 @@ def create_group():
                     name, description, website, g.user['ID'], g.user['Email'], address,
                     category_id, affiliated, college, requires_dues, skill_level
                 ))
-
                 group_id = db.execute("SELECT last_insert_rowid()").fetchone()[0]
-
                 db.execute("""
                     INSERT INTO Membership (UserID, GroupID, Role, JoinDate)
-                    VALUES (?, ?, 'organizer', ?)
+                    VALUES (?, ?, 'Organizer', ?)
                 """, (g.user['ID'], group_id, datetime.now().date()))
-
+                print("yes3")
                 db.commit()
                 flash('Group created successfully.')
                 return redirect(url_for('groups.group_details', group_id=group_id))
