@@ -77,9 +77,10 @@ def event_details(event_id) -> Response:
     """
     db = get_db()
     event = db.execute("""
-        SELECT e.*, g.Name AS GroupName, g.ContactName as HostName, g.Email as HostEmail
+        SELECT e.*, g.Name AS GroupName, u.Name as HostName, g.Email as HostEmail
         FROM Event e
         JOIN ActivityGroup g ON e.GroupID = g.ID
+        LEFT JOIN User u ON g.ContactUserID = u.ID
         WHERE e.EventID = ?
     """, (event_id,)).fetchone()
     

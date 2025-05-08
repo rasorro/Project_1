@@ -41,7 +41,7 @@ def join_group(group_id):
         db.commit()
         flash('You successfully joined the group.')
 
-    return redirect(url_for('groups.detail', group_id=group_id))
+    return redirect(url_for('groups.group_details', group_id=group_id))
 
 
 @bp.route('/leave/<int:group_id>', methods=['POST'])
@@ -68,7 +68,7 @@ def leave_group(group_id):
     else:
         flash('You are not a member of this group.')
 
-    return redirect(url_for('groups.detail', group_id=group_id))
+    return redirect(url_for('groups.group_details', group_id=group_id))
 
 
 @bp.route('/my-groups')
