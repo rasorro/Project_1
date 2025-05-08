@@ -13,7 +13,7 @@
     <textarea name="description" id="description"></textarea>
 
     <label for="website">Website</label>
-    <input type="text" name="website" id="website" placeholder="e.g. www.example.com">
+    <input type="text" name="website" id="website" placeholder="e.g. https://www.example.com">
 
     <label for="address">Address</label>
     <input type="text" name="address" id="address">
@@ -27,11 +27,28 @@
 
     <label>
       <input type="checkbox" name="affiliated" id="affiliated" onchange="toggleCollege(this)">
-      Affiliated with a College
+      Affiliated with a College in Boston
     </label>
 
     <label for="college">College</label>
-    <input type="text" name="college" id="college" placeholder="e.g. Boston University">
+    <select name="college" id="college" required>
+      <option value="">-- Select one --</option>
+      <option value="Boston College">Boston College</option>
+      <option value="Northeastern University">Northeastern University</option>
+      <option value="Harvard University">Harvard University</option>
+      <option value="Massachusetts Institute of Technology">Massachusetts Institute of Technology</option>
+      <option value="Boston University">Boston University</option>
+      <option value="Suffolk University">Suffolk University</option>
+      <option value="Berklee College of Music">Berklee College of Music</option>
+      <option value="Simmons University">Simmons University</option>
+      <option value="Wentworth Institute of Technology">Wentworth Institute of Technology</option>
+      <option value="University of Massachusetts Boston">University of Massachusetts Boston</option>
+      <option value="Tufts University">Tufts University</option>
+      <option value="Lesley University">Lesley University</option>
+      <option value="New England Conservatory of Music">New England Conservatory of Music</option>
+      <option value="Massachusetts College of Art and Design">Massachusetts College of Art and Design</option>
+      <option value="Other">Other</option>
+    </select>
 
     <label>
       <input type="checkbox" name="requires_dues">
@@ -40,9 +57,9 @@
 
     <label for="skill_level">Skill Level</label>
     <select name="skill_level" id="skill_level" required>
-      <option value="beginner">Beginner</option>
-      <option value="intermediate">Intermediate</option>
-      <option value="advanced">Advanced</option>
+      <option value="Beginner">Beginner</option>
+      <option value="Intermediate">Intermediate</option>
+      <option value="Advanced">Advanced</option>
     </select>
 
     <input type="submit" value="Create Group">
