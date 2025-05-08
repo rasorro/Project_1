@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>Create New Group</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="name">Group Name</label>
+    <input type="text" name="name" id="name" required>
+
+    <label for="description">Description</label>
+    <textarea name="description" id="description"></textarea>
+
+    <label for="website">Website</label>
+    <input type="url" name="website" id="website">
+
+    <label for="contact_name">Contact Name</label>
+    <input type="text" name="contact_name" id="contact_name">
+
+    <label for="email">Contact Email</label>
+    <input type="email" name="email" id="email">
+
+    <label for="address">Address</label>
+    <input type="text" name="address" id="address">
+
+    <label for="category_id">Category</label>
+    <select name="category_id" id="category_id" required>
+      {% for cat in categories %}
+        <option value="{{ cat.ID }}">{{ cat.Name }}</option>
+      {% endfor %}
+    </select>
+
+    <label>
+      <input type="checkbox" name="affiliated">
+      Affiliated with College
+    </label>
+
+    <label for="college">College</label>
+    <input type="text" name="college" id="college">
+
+    <label>
+      <input type="checkbox" name="requires_dues">
+      Requires Dues
+    </label>
+
+    <label for="skill_level">Skill Level</label>
+    <select name="skill_level" id="skill_level" required>
+      <option value="beginner">Beginner</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="advanced">Advanced</option>
+    </select>
+
+    <input type="submit" value="Create Group">
+  </form>
+{% endblock %}
