@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS [User] (
     [Email] TEXT UNIQUE NOT NULL,
     [Affiliation] TEXT CHECK ([Affiliation] IN ('Student', 'Alumnus', 'Resident')),
     [College] TEXT DEFAULT NULL CHECK (([Affiliation] = 'Resident' AND [College] IS NULL) OR
-        ([Affiliation] != 'resident' AND [College] IN ('Boston University', 'Northeastern University', 'Harvard University',
+        ([Affiliation] != 'Resident' AND [College] IN ('Boston University', 'Northeastern University', 'Harvard University',
         'Massachusetts Institute of Technology', 'Boston College', 'Emerson College', 'Suffolk University',
         'Berklee College of Music', 'Simmons University', 'Wentworth Institute of Technology', 'University of Massachusetts Boston',
         'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design', 'Other')))

@@ -25,10 +25,14 @@ def register() -> str:
 
     if request.method == 'POST':
         name = request.form['name']
-        email = request.form['email']
+        email = request.form['email'].strip().lower()
         affiliation = request.form['affiliation']
-        college = request.form['college'] or None 
+        college = None
+        if affiliation != 'Resident':
+            college = request.form['college'] or None 
         password = request.form['password']
+        
+        print(f"affiliation={affiliation!r} college={college!r}")
         
         db = get_db() # pylint: disable=invalid-name
         error = None
@@ -57,14 +61,12 @@ def register() -> str:
                 )
 
                 db.commit()
-            except db.IntegrityError:
-                error = "A user with that email already exists."
-            else:
                 session.clear()
                 session['userID'] = user['ID']
                 return redirect(url_for('index'))
-            
-        flash(error)
+            except db.IntegrityError as e:
+                    error = f"Registration failed: {e}"
+                    flash(error)
         
     return render_template('auth/register.html')
 
