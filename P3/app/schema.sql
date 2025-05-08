@@ -4,13 +4,13 @@ CREATE TABLE IF NOT EXISTS [Authentication] (
     [SessionID] Text
 );
 
-CREATE TABLE IF NOT EXISTS User (
-    ID INTEGER PRIMARY KEY,
-    Name TEXT NOT NULL,
-    Email TEXT UNIQUE NOT NULL,
-    Affiliation TEXT CHECK (Affiliation IN ('student', 'alumnus', 'resident')),
-    College TEXT DEFAULT NULL CHECK ((Affiliation = 'resident' AND College IS NULL) OR
-        (Affiliation != 'resident' AND College IN ('Boston University', 'Northeastern University', 'Harvard University',
+CREATE TABLE IF NOT EXISTS [User] (
+    [ID] INTEGER PRIMARY KEY AUTOINCREMENT,
+    [Name] TEXT NOT NULL,
+    [Email] TEXT UNIQUE NOT NULL,
+    [Affiliation] TEXT CHECK ([Affiliation] IN ('Student', 'Alumnus', 'Resident')),
+    [College] TEXT DEFAULT NULL CHECK (([Affiliation] = 'Resident' AND [College] IS NULL) OR
+        ([Affiliation] != 'resident' AND [College] IN ('Boston University', 'Northeastern University', 'Harvard University',
         'Massachusetts Institute of Technology', 'Boston College', 'Emerson College', 'Suffolk University',
         'Berklee College of Music', 'Simmons University', 'Wentworth Institute of Technology', 'University of Massachusetts Boston',
         'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design')))
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS [ActivityGroup] (
         'Tufts University', 'Lesley University', 'New England Conservatory of Music', 'Massachusetts College of Art and Design'))
     OR ([AffiliatedWithCollege] = 0 AND [College] IS NULL)),
     [RequiresDues] BOOLEAN,
-    [SkillLevel] TEXT CHECK ([SkillLevel] IN ('beginner', 'intermediate', 'advanced')),
+    [SkillLevel] TEXT CHECK ([SkillLevel] IN ('Beginner', 'Intermediate', 'Advanced')),
     FOREIGN KEY ([CategoryID]) REFERENCES [Category]([ID]) ON DELETE SET NULL
 );
 
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS [Event] (
 );
 
 CREATE TABLE IF NOT EXISTS [Membership] (
-    [Role] TEXT CHECK ([Role] IN ('member', 'organizer')),
+    [Role] TEXT CHECK ([Role] IN ('Member', 'Organizer')),
     [JoinDate] DATE,
     [UserID] INTEGER REFERENCES [User]([ID]) ON DELETE CASCADE,
     [GroupID] INTEGER REFERENCES [ActivityGroup]([ID]) ON DELETE CASCADE,

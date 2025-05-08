@@ -27,7 +27,29 @@
           {{ group.Name }}
         </option>
       {% endfor %}
+
     </select>
+    <label for="college">College</label>
+  <select name="college" id="college">
+    <option value="">-- All Colleges --</option>
+    {% for row in colleges %}
+      <option value="{{ row.College }}" {% if row.College == college %}selected{% endif %}>
+        {{ row.College }}
+      </option>
+    {% endfor %}
+  </select>
+
+  </select>
+  <label for="skill_level">Skill Level</label>
+  <select name="SkillLevel" id="skill_level">
+  <option value="">-- All Colleges --</option>
+  {% for row in skill_levels %}
+    <option value="{{ row.SkillLevel }}" {% if row.SkillLevel == skill_level %}selected{% endif %}>
+      {{ row.SkillLevel }}
+    </option>
+  {% endfor %}
+  </select>
+
 
     <input type="submit" value="Apply Filters">
   </form>
